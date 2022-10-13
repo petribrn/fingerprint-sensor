@@ -1,4 +1,4 @@
-<h1 align="center" id="top">Rest_api</h1>
+<h1 align="center" id="top">Fingerprint Sensor Project</h1>
 
 <p align="center">
   <a href="#dart-about">About</a> &#xa0; | &#xa0;

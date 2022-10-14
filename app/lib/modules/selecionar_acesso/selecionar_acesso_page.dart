@@ -52,7 +52,7 @@ class SelecionarAcessoPage extends GetView<SelecionarAcessoController> {
                 ),
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color?>(
-                    controller.currentMode == AccessMode.cadastro_biometria ? AppColors.bluePrimaryLight : null,
+                    controller.currentMode == AccessMode.cadastro_biometria ? AppColors.greenPrimaryLight : null,
                   ),
                 ),
               ),
@@ -79,7 +79,7 @@ class SelecionarAcessoPage extends GetView<SelecionarAcessoController> {
                 ),
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color?>(
-                    controller.currentMode == AccessMode.verificar_biometria ? AppColors.bluePrimaryLight : null,
+                    controller.currentMode == AccessMode.verificar_biometria ? AppColors.greenPrimaryLight : null,
                   ),
                 ),
               ),

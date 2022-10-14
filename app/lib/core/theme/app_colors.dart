@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 abstract class AppColors {
   AppColors._();
 
-  static const bluePrimary = Color(0xFF4CD137);
-  static const bluePrimaryDark = Color.fromARGB(255, 64, 188, 45);
-  static const bluePrimaryLight = Color.fromARGB(255, 96, 221, 77);
+  static const greenPrimary = Color(0xFF4CD137);
+  static const greenPrimaryDark = Color.fromARGB(255, 64, 188, 45);
+  static const greenPrimaryLight = Color.fromARGB(255, 96, 221, 77);
 
   static const red700 = Color(0xFFD32F2F);
   static const red900 = Color(0xFFB71C1C);

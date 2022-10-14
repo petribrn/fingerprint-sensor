@@ -24,7 +24,7 @@ class SplashScreenPage extends GetView<SplashScreenController> {
           const SizedBox(height: 24),
           Obx(
             () => controller.isLoading
-                ? const CircularProgressIndicator(strokeWidth: 3, color: AppColors.bluePrimary)
+                ? const CircularProgressIndicator(strokeWidth: 3, color: AppColors.greenPrimary)
                 : Text('Bem vindo!', style: textTheme.headline6?.copyWith(fontWeight: FontWeight.w400)),
           ),
         ],

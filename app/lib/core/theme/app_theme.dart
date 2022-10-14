@@ -4,22 +4,23 @@ import 'app_colors.dart';
 
 ThemeData makeAppTheme() {
   return ThemeData(
-    primaryColor: AppColors.bluePrimary,
-    primaryColorDark: AppColors.bluePrimaryDark,
-    primaryColorLight: AppColors.bluePrimaryLight,
-    colorScheme: ColorScheme.fromSwatch().copyWith(secondary: AppColors.bluePrimary, error: AppColors.red700),
+    primaryColor: AppColors.greenPrimary,
+    primaryColorDark: AppColors.greenPrimaryDark,
+    primaryColorLight: AppColors.greenPrimaryLight,
+    colorScheme: ColorScheme.fromSwatch().copyWith(primary: AppColors.greenPrimary, secondary: AppColors.greenPrimary, error: AppColors.red700),
     textTheme: makeTextTheme(),
     backgroundColor: Colors.white,
     highlightColor: Colors.transparent,
     dividerTheme: const DividerThemeData(space: 0, color: AppColors.grey300),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(backgroundColor: AppColors.bluePrimary),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(backgroundColor: AppColors.greenPrimary),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: AppColors.bluePrimary),
+        side: const BorderSide(color: AppColors.greenPrimary),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     ),
     iconTheme: const IconThemeData(color: Colors.white),
+    appBarTheme: const AppBarTheme(color: AppColors.greenPrimary),
   );
 }
 

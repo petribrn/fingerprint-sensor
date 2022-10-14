@@ -25,25 +25,25 @@ class BottomNavigationBarUtils {
       PersistentBottomNavBarItem(
         icon: accessMode == AccessMode.cadastro_biometria ? const Icon(Icons.add) : const Icon(Icons.fingerprint),
         title: accessMode == AccessMode.cadastro_biometria ? 'Cadastrar' : 'Verificar',
-        activeColorPrimary: AppColors.bluePrimary,
+        activeColorPrimary: AppColors.greenPrimary,
         inactiveColorPrimary: AppColors.blackInactive,
       ),
       PersistentBottomNavBarItem(
         icon: accessMode == AccessMode.cadastro_biometria ? const Icon(Icons.storage) : const Icon(Icons.history),
         title: accessMode == AccessMode.cadastro_biometria ? 'Salvos' : 'Histórico',
-        activeColorPrimary: AppColors.bluePrimary,
+        activeColorPrimary: AppColors.greenPrimary,
         inactiveColorPrimary: AppColors.blackInactive,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.swap_horiz),
         title: 'Alterar acesso',
-        activeColorPrimary: AppColors.bluePrimary,
+        activeColorPrimary: AppColors.greenPrimary,
         inactiveColorPrimary: AppColors.blackInactive,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.info_outline),
         title: 'Sobre',
-        activeColorPrimary: AppColors.bluePrimary,
+        activeColorPrimary: AppColors.greenPrimary,
         inactiveColorPrimary: AppColors.blackInactive,
       ),
     ];

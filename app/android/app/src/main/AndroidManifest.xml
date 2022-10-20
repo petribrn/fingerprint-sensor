@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.app">
    <application
-        android:label="Leitor Biométrico"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Fingerprint"
+        android:icon="@mipmap/ic_fingerprint_logo">
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -9,35 +9,40 @@ import 'routes.dart';
 
 List<GetPage> makeAppPages() {
   return [
+    // Splash
     GetPage(
       name: AppRoutes.SPLASH,
       page: () => const SplashScreenPage(),
-      binding: BindingsBuilder(() => Get.lazyPut<SplashScreenController>(() => makeSplashScreenController())),
+      binding: BindingsBuilder(() => Get.lazyPut<SplashScreenController>(() => makeGetxSplashScreenController())),
     ),
+    // Selecionar acesso
     GetPage(
       name: AppRoutes.ACESSO,
       page: () => const SelecionarAcessoPage(),
-      binding: BindingsBuilder(() => Get.lazyPut<SelecionarAcessoController>(() => makeSelecionarAcessoController(), fenix: true)),
+      binding: BindingsBuilder(() => Get.lazyPut<SelecionarAcessoController>(() => makeGetxSelecionarAcessoController(), fenix: true)),
     ),
+    // Home/Bottom navigation bar
     GetPage(
       name: AppRoutes.HOME,
       page: () => const HomePage(),
       binding: BindingsBuilder(() {
+        // Bindings: Local Utils
         Get.put(BottomNavigationBarUtils());
 
-        Get.lazyPut<HomeController>(() => makeHomeController(), fenix: true);
+        // Bindings: Local Pages
+        Get.lazyPut<HomeController>(() => makeGetxHomeController(), fenix: true);
 
-        Get.lazyPut<CadastrarBiometriaController>(() => makeCadastrarBiometriaController());
+        Get.lazyPut<CadastrarBiometriaController>(() => makeGetxCadastrarBiometriaController());
 
-        Get.lazyPut<VisualizarBiometriasController>(() => makeVisualizarBiometriasController());
+        Get.lazyPut<VisualizarBiometriasController>(() => makeGetxVisualizarBiometriasController());
 
-        Get.lazyPut<VerificarBiometriaController>(() => makeVerificarBiometriaController());
+        Get.lazyPut<VerificarBiometriaController>(() => makeGetxVerificarBiometriaController());
 
-        Get.lazyPut<VisualizarHistoricoController>(() => makeVisualizarHistoricoController());
+        Get.lazyPut<VisualizarHistoricoController>(() => makeGetxVisualizarHistoricoController());
 
-        Get.lazyPut<SelecionarAcessoController>(() => makeSelecionarAcessoController(), fenix: true);
+        Get.lazyPut<SelecionarAcessoController>(() => makeGetxSelecionarAcessoController(), fenix: true);
 
-        Get.lazyPut<SobreController>(() => makeSobreController());
+        Get.lazyPut<SobreController>(() => makeGetxSobreController());
       }),
     ),
   ];

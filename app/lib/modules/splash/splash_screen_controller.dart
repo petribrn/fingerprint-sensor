@@ -4,7 +4,7 @@ import '../../contracts/contracts.dart';
 import '../../routes/routes.dart';
 
 class GetxSplashScreenController extends GetxController implements SplashScreenController {
-  final UserSessionStorageUtils userSessionStorage;
+  final UserSessionStorage userSessionStorage;
 
   final _isLoading = true.obs;
 

@@ -1,6 +1,6 @@
 import '../../../contracts/contracts.dart';
 import '../../../modules/modules.dart';
 
-VerificarBiometriaController makeVerificarBiometriaController() {
+VerificarBiometriaController makeGetxVerificarBiometriaController() {
   return GetxVerificarBiometriaController();
 }

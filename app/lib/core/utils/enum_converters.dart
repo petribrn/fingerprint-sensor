@@ -1,4 +1,4 @@
-import '../../../data/data.dart';
+import '../../data/data.dart';
 
 AccessMode getAccessModeById(int? idAcesso) {
   switch (idAcesso) {

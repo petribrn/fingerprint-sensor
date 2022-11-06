@@ -3,10 +3,10 @@ import 'package:fingerprint_sensor/core/core.dart';
 
 import '../../contracts/contracts.dart';
 
-class UserSessionStorageUtilsImpl implements UserSessionStorageUtils {
+class UserSessionStorageImpl implements UserSessionStorage {
   FlutterSecureStorage secureStorage;
 
-  UserSessionStorageUtilsImpl({
+  UserSessionStorageImpl({
     required this.secureStorage,
   });
 
@@ -17,18 +17,18 @@ class UserSessionStorageUtilsImpl implements UserSessionStorageUtils {
   }
 
   @override
-  Future<void> writeFirstAppUse() async {
+  Future<void> writeNotFirstAppUse() async {
     await secureStorage.write(key: isFirstAppUseKey, value: 'false');
   }
 
   @override
-  Future<int?> getAcessoSelectedId() async {
+  Future<int?> getAccessSelectedId() async {
     final idAcesso = await secureStorage.read(key: acessoSelectedKey);
     return idAcesso == null ? null : int.parse(idAcesso);
   }
 
   @override
-  Future<void> writeAcessoSelectedId(int idAcesso) async {
+  Future<void> writeAccessSelectedId(int idAcesso) async {
     await secureStorage.write(key: acessoSelectedKey, value: '$idAcesso');
   }
 }

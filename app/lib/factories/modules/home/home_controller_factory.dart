@@ -2,10 +2,11 @@ import 'package:get/get.dart';
 
 import '../../../contracts/contracts.dart';
 import '../../../modules/modules.dart';
+import '../../infra/infra.dart';
 
-HomeController makeHomeController() {
+HomeController makeGetxHomeController() {
   return GetxHomeController(
-    acessoController: Get.find<AcessoController>(),
+    userSessionStorage: makeUserSessionStorageImpl(),
     bottomNavigationBarUtils: Get.find<BottomNavigationBarUtils>(),
   );
 }

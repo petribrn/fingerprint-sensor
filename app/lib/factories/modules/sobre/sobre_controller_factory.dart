@@ -1,6 +1,6 @@
 import '../../../contracts/contracts.dart';
 import '../../../modules/modules.dart';
 
-SobreController makeSobreController() {
+SobreController makeGetxSobreController() {
   return GetxSobreController();
 }

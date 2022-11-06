@@ -1,1 +1,1 @@
-export 'acesso_modo.dart';
+export 'access_mode.dart';

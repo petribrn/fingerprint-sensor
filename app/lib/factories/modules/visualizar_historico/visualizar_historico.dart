@@ -1,1 +1,1 @@
-export 'visualizar_historico_controller.dart';
+export 'visualizar_historico_controller_factory.dart';

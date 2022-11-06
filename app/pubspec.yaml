@@ -15,12 +15,12 @@ dependencies:
 
   cupertino_icons: ^1.0.2
 
-  # State managment
+  # State management
   get: ^4.6.5
 
   # Infra & Persistance
   flutter_secure_storage: ^6.0.0
-  flutter_dotenv: ^5.0.2
+  envied: ^0.2.3
   http: ^0.13.5
 
   # UI
@@ -28,16 +28,25 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   shimmer: ^2.0.0
 
+  # Linter
+  analyzer: ^4.1.0
+
+  # Other
+  equatable: ^2.0.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^2.0.0
 
+  # Code generation
+  build_runner: ^2.3.2
+  envied_generator: ^0.2.3
+
 flutter:
   uses-material-design: true
 
   assets:
-    - .env
     - assets/images/
     - assets/lottie/

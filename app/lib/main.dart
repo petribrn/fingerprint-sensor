@@ -20,7 +20,7 @@ class FingerprintSensorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Leitor Biométrico',
+      title: 'Sensor Biométrico',
       theme: makeAppTheme(),
       getPages: makeAppPages(),
       initialRoute: AppRoutes.SPLASH,

@@ -28,11 +28,11 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   shimmer: ^2.0.0
 
-  # Code generation
-  json_annotation: ^4.7.0
-
   # Linter
   analyzer: ^4.1.0
+
+  # Other
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:
@@ -42,13 +42,11 @@ dev_dependencies:
 
   # Code generation
   build_runner: ^2.3.2
-  json_serializable: ^6.5.4
   envied_generator: ^0.2.3
 
 flutter:
   uses-material-design: true
 
   assets:
-    - .env
     - assets/images/
     - assets/lottie/

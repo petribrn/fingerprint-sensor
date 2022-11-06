@@ -9,16 +9,19 @@ import 'routes.dart';
 
 List<GetPage> makeAppPages() {
   return [
+    // Splash
     GetPage(
       name: AppRoutes.SPLASH,
       page: () => const SplashScreenPage(),
       binding: BindingsBuilder(() => Get.lazyPut<SplashScreenController>(() => makeGetxSplashScreenController())),
     ),
+    // Selecionar acesso
     GetPage(
       name: AppRoutes.ACESSO,
       page: () => const SelecionarAcessoPage(),
       binding: BindingsBuilder(() => Get.lazyPut<SelecionarAcessoController>(() => makeGetxSelecionarAcessoController(), fenix: true)),
     ),
+    // Home/Bottom navigation bar
     GetPage(
       name: AppRoutes.HOME,
       page: () => const HomePage(),

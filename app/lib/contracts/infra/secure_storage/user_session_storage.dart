@@ -1,4 +1,4 @@
-abstract class UserSessionStorageUtils {
+abstract class UserSessionStorage {
   Future<bool> isFirstAppUse();
   Future<void> writeFirstAppUse();
 

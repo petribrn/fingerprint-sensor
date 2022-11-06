@@ -1,10 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../contracts/contracts.dart';
-import '../../../core/core.dart';
+import '../../../infra/infra.dart';
 
-UserSessionStorageUtils makeUserSessionStorageUtils() {
-  return UserSessionStorageUtilsImpl(
+UserSessionStorage makeUserSessionStorage() {
+  return UserSessionStorageImpl(
     secureStorage: const FlutterSecureStorage(),
   );
 }

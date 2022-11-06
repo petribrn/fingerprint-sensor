@@ -7,7 +7,7 @@ import '../../routes/routes.dart';
 
 class GetxSelecionarAcessoController extends GetxController implements SelecionarAcessoController {
   final AcessoController acessoController;
-  final UserSessionStorageUtils userSessionStorage;
+  final UserSessionStorage userSessionStorage;
 
   final _isFirstAppUse = true.obs;
   final _currentMode = Rx(AccessMode.none);

@@ -4,6 +4,6 @@ import '../../factories.dart';
 
 SplashScreenController makeSplashScreenController() {
   return GetxSplashScreenController(
-    userSessionStorage: makeUserSessionStorageUtils(),
+    userSessionStorage: makeUserSessionStorage(),
   );
 }

@@ -3,10 +3,10 @@ import 'package:fingerprint_sensor/core/core.dart';
 
 import '../../contracts/contracts.dart';
 
-class UserSessionStorageUtilsImpl implements UserSessionStorageUtils {
+class UserSessionStorageImpl implements UserSessionStorage {
   FlutterSecureStorage secureStorage;
 
-  UserSessionStorageUtilsImpl({
+  UserSessionStorageImpl({
     required this.secureStorage,
   });
 

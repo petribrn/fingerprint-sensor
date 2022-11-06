@@ -7,6 +7,6 @@ import '../../factories.dart';
 SelecionarAcessoController makeSelecionarAcessoController() {
   return GetxSelecionarAcessoController(
     acessoController: Get.find<AcessoController>(),
-    userSessionStorage: makeUserSessionStorageUtils(),
+    userSessionStorage: makeUserSessionStorage(),
   );
 }

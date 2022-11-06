@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
-import '../core/core.dart';
-import '../data/data.dart';
-import '../routes/pages.dart';
-import '../routes/routes.dart';
+import 'core/core.dart';
+import 'data/data.dart';
+import 'routes/pages.dart';
+import 'routes/routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

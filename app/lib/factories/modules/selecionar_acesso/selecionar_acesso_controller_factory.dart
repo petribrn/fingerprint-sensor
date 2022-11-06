@@ -2,8 +2,8 @@ import '../../../contracts/contracts.dart';
 import '../../../modules/modules.dart';
 import '../../factories.dart';
 
-SelecionarAcessoController makeSelecionarAcessoController() {
+SelecionarAcessoController makeGetxSelecionarAcessoController() {
   return GetxSelecionarAcessoController(
-    userSessionStorage: makeUserSessionStorage(),
+    userSessionStorage: makeUserSessionStorageImpl(),
   );
 }

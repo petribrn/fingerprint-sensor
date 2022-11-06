@@ -4,9 +4,9 @@ import '../../../contracts/contracts.dart';
 import '../../../modules/modules.dart';
 import '../../infra/infra.dart';
 
-HomeController makeHomeController() {
+HomeController makeGetxHomeController() {
   return GetxHomeController(
-    userSessionStorage: makeUserSessionStorage(),
+    userSessionStorage: makeUserSessionStorageImpl(),
     bottomNavigationBarUtils: Get.find<BottomNavigationBarUtils>(),
   );
 }

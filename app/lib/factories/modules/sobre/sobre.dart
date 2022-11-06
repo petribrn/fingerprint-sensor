@@ -1,1 +1,1 @@
-export 'sobre_controller.dart';
+export 'sobre_controller_factory.dart';

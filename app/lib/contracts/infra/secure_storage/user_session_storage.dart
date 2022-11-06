@@ -1,7 +1,7 @@
 abstract class UserSessionStorage {
   Future<bool> isFirstAppUse();
-  Future<void> writeFirstAppUse();
+  Future<void> writeNotFirstAppUse();
 
-  Future<int?> getAcessoSelectedId();
-  Future<void> writeAcessoSelectedId(int idAcesso);
+  Future<int?> getAccessSelectedId();
+  Future<void> writeAccessSelectedId(int idAcesso);
 }

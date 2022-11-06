@@ -26,7 +26,7 @@ class GetxSelecionarAcessoController extends GetxController implements Seleciona
     super.onInit();
     _isFirstAppUse.value = await userSessionStorage.isFirstAppUse();
 
-    final idAccessModeSelected = await userSessionStorage.getAcessoSelectedId();
+    final idAccessModeSelected = await userSessionStorage.getAccessSelectedId();
     _currentMode.value = getAccessModeById(idAccessModeSelected);
   }
 
@@ -41,9 +41,9 @@ class GetxSelecionarAcessoController extends GetxController implements Seleciona
     }
 
     if (_isFirstAppUse.value) {
-      await userSessionStorage.writeFirstAppUse();
+      await userSessionStorage.writeNotFirstAppUse();
     }
-    await userSessionStorage.writeAcessoSelectedId(accessMode.index);
+    await userSessionStorage.writeAccessSelectedId(accessMode.index);
 
     Get.offAllNamed(AppRoutes.HOME);
   }

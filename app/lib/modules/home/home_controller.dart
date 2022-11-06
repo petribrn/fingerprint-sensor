@@ -28,7 +28,7 @@ class GetxHomeController extends GetxController implements HomeController {
   Future<void> onInit() async {
     super.onInit();
 
-    final idAccessModeSelected = await userSessionStorage.getAcessoSelectedId();
+    final idAccessModeSelected = await userSessionStorage.getAccessSelectedId();
     _currentMode.value = getAccessModeById(idAccessModeSelected);
   }
 

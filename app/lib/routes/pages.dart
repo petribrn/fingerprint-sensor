@@ -23,8 +23,10 @@ List<GetPage> makeAppPages() {
       name: AppRoutes.HOME,
       page: () => const HomePage(),
       binding: BindingsBuilder(() {
+        // Bindings: Local Utils
         Get.put(BottomNavigationBarUtils());
 
+        // Bindings: Local Pages
         Get.lazyPut<HomeController>(() => makeHomeController(), fenix: true);
 
         Get.lazyPut<CadastrarBiometriaController>(() => makeCadastrarBiometriaController());

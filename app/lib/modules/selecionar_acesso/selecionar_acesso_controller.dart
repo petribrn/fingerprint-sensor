@@ -6,7 +6,6 @@ import '../../data/data.dart';
 import '../../routes/routes.dart';
 
 class GetxSelecionarAcessoController extends GetxController implements SelecionarAcessoController {
-  final AcessoController acessoController;
   final UserSessionStorage userSessionStorage;
 
   final _isFirstAppUse = true.obs;
@@ -19,18 +18,16 @@ class GetxSelecionarAcessoController extends GetxController implements Seleciona
   AccessMode get currentMode => _currentMode.value;
 
   GetxSelecionarAcessoController({
-    required this.acessoController,
     required this.userSessionStorage,
   });
 
   @override
   Future<void> onInit() async {
     super.onInit();
-
-    final idAcessoSelected = await userSessionStorage.getAcessoSelectedId();
-
     _isFirstAppUse.value = await userSessionStorage.isFirstAppUse();
-    _currentMode.value = getAccessModeById(idAcessoSelected);
+
+    final idAccessModeSelected = await userSessionStorage.getAcessoSelectedId();
+    _currentMode.value = getAccessModeById(idAccessModeSelected);
   }
 
   @override
@@ -43,13 +40,11 @@ class GetxSelecionarAcessoController extends GetxController implements Seleciona
       return showSnackbar(text: 'Modo de acesso já selecionado');
     }
 
-    acessoController.accessModeSelected = accessMode;
-    Get.offAllNamed(AppRoutes.HOME);
-
     if (_isFirstAppUse.value) {
       await userSessionStorage.writeFirstAppUse();
     }
-
     await userSessionStorage.writeAcessoSelectedId(accessMode.index);
+
+    Get.offAllNamed(AppRoutes.HOME);
   }
 }

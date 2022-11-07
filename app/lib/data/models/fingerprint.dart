@@ -18,6 +18,13 @@ class Fingerprint extends Equatable {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'fingerprint_id': fingerprintId,
+      'name': name,
+    };
+  }
+
   Fingerprint copyWith({
     int? fingerprintId,
     String? name,

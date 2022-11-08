@@ -30,13 +30,13 @@ class HttpFingerprintRepository implements FingerprintRepository {
     final url = makeApiUrl(path: 'users');
 
     try {
-      await httpClientAdapter.request(
+      final httpResponse = await httpClientAdapter.request(
         url: url,
         method: 'post',
         body: fingerprint.toMap(),
       );
 
-      return true;
+      return httpResponse == null ? false : true;
     } on Exception catch (_) {
       return false;
     }
@@ -44,16 +44,16 @@ class HttpFingerprintRepository implements FingerprintRepository {
 
   @override
   Future<bool> updateFingerprint(Fingerprint fingerprint) async {
-    final url = makeApiUrl(path: 'users/$fingerprint');
+    final url = makeApiUrl(path: 'users/${fingerprint.fingerprintId}');
 
     try {
-      await httpClientAdapter.request(
+      final httpResponse = await httpClientAdapter.request(
         url: url,
         method: 'put',
         body: fingerprint.toMap(),
       );
 
-      return true;
+      return httpResponse == null ? false : true;
     } on Exception catch (_) {
       return false;
     }
@@ -64,12 +64,12 @@ class HttpFingerprintRepository implements FingerprintRepository {
     final url = makeApiUrl(path: 'users/$fingerprintId');
 
     try {
-      await httpClientAdapter.request(
+      final httpResponse = await httpClientAdapter.request(
         url: url,
         method: 'delete',
       );
 
-      return true;
+      return httpResponse == null ? false : true;
     } on Exception catch (_) {
       return false;
     }

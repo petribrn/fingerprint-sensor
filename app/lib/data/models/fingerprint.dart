@@ -9,7 +9,7 @@ class Fingerprint extends Equatable {
     this.name,
   });
 
-  factory Fingerprint.fromJson(Map<String, dynamic> json) {
+  factory Fingerprint.fromMap(Map<String, dynamic> json) {
     if (!json.containsKey('fingerprint_id')) throw Exception();
 
     return Fingerprint(
@@ -18,7 +18,7 @@ class Fingerprint extends Equatable {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'fingerprint_id': fingerprintId,
       'name': name,

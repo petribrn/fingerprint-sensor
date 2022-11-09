@@ -18,6 +18,7 @@ void showSnackbar({
     backgroundColor: AppColors.blackSurface,
     margin: const EdgeInsets.only(right: 8, bottom: 16, left: 8),
     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-    messageText: Text(text, style: Get.theme.textTheme.caption!.copyWith(color: Colors.white, fontSize: 14)),
+    messageText: Text(text, style: Get.theme.textTheme.caption!.copyWith(color: AppColors.greySmoke, fontSize: 14)),
+    borderColor: AppColors.greySmoke,
   );
 }

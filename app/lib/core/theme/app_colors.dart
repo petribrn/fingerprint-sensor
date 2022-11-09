@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 abstract class AppColors {
   AppColors._();
 
-  static const greenPrimary = Color(0xFF2EBB55);
-  static const greenPrimaryDark = Color.fromARGB(255, 31, 155, 66);
-  static const greenPrimaryLight = Color.fromARGB(255, 55, 199, 96);
+  static const primary = Color(0xFF2D333B);
+  static const primaryDark = Color(0xFF22272E);
+  static const primaryLight = Color(0xFF394049);
+
+  static const greenCheck = Color(0xFF347D39);
+  static const greenCheckDark = Color(0xFF293B30);
+  static const greenCheckPressed = Color.fromARGB(255, 47, 76, 58);
 
   static const red700 = Color(0xFFD32F2F);
   static const red900 = Color(0xFFB71C1C);
@@ -14,6 +18,7 @@ abstract class AppColors {
   static final whiteDisabled = Colors.white.withOpacity(0.5);
   static final whiteInactive = Colors.white.withOpacity(0.54);
 
+  static const greySmoke = Color(0xFFA0AEBE);
   static const grey100 = Color(0xFFF5F5F5);
   static const grey200 = Color(0xFFEEEEEE);
   static const grey300 = Color(0xFFE0E0E0);

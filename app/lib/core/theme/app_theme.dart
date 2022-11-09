@@ -4,28 +4,30 @@ import 'app_colors.dart';
 
 ThemeData makeAppTheme() {
   return ThemeData(
-    primaryColor: AppColors.greenPrimary,
-    primaryColorDark: AppColors.greenPrimaryDark,
-    primaryColorLight: AppColors.greenPrimaryLight,
-    colorScheme: ColorScheme.fromSwatch().copyWith(primary: AppColors.greenPrimary, secondary: AppColors.greenPrimary, error: AppColors.red700),
+    primaryColor: AppColors.primary,
+    primaryColorDark: AppColors.primaryDark,
+    primaryColorLight: AppColors.primaryLight,
+    colorScheme: ColorScheme.fromSwatch().copyWith(primary: AppColors.primaryDark, secondary: AppColors.primary, error: AppColors.red700),
     textTheme: makeTextTheme(),
-    backgroundColor: Colors.white,
-    highlightColor: Colors.transparent,
-    dividerTheme: const DividerThemeData(space: 0, color: AppColors.grey300),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(backgroundColor: AppColors.greenPrimary),
+    scaffoldBackgroundColor: AppColors.primaryDark,
+    splashColor: AppColors.greySmoke,
+    dividerTheme: const DividerThemeData(space: 0, color: AppColors.primary),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(backgroundColor: AppColors.greenCheck),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: AppColors.greenPrimary),
+        side: const BorderSide(color: AppColors.greenCheck),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     ),
-    iconTheme: const IconThemeData(color: Colors.white),
-    appBarTheme: const AppBarTheme(color: AppColors.greenPrimary),
+    buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+    iconTheme: const IconThemeData(color: AppColors.greySmoke),
+    appBarTheme: const AppBarTheme(color: AppColors.primaryDark),
+    dialogBackgroundColor: AppColors.primaryDark,
   );
 }
 
 TextTheme makeTextTheme() {
-  const color = AppColors.grey900;
+  const color = AppColors.greySmoke;
 
   return const TextTheme(
     headline1: TextStyle(fontWeight: FontWeight.normal, fontSize: 96, color: color),

@@ -1,1 +1,1 @@
-export 'trocar_acesso_confirm_dialog.dart';
+export 'alterar_acesso_confirm_dialog.dart';

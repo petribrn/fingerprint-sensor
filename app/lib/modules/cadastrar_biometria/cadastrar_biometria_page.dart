@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CadastroBiometriaPage extends StatelessWidget {
   const CadastroBiometriaPage({Key? key}) : super(key: key);
@@ -8,7 +9,7 @@ class CadastroBiometriaPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Cadastrar'),
+        title: Text('Cadastrar', style: Get.textTheme.headline6),
       ),
       body: Container(),
     );

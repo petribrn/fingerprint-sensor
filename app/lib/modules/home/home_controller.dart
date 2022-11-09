@@ -12,12 +12,18 @@ class GetxHomeController extends GetxController implements HomeController {
   final BottomNavigationBarUtils bottomNavigationBarUtils;
 
   final _currentMode = Rx(AccessMode.none);
+  final _currentTab = 0.obs;
 
   @override
   final PersistentTabController tabController = PersistentTabController();
 
   @override
   AccessMode get currentMode => _currentMode.value;
+
+  @override
+  int get currentTab => _currentTab.value;
+  @override
+  set currentTab(int newTab) => _currentTab.value = newTab;
 
   GetxHomeController({
     required this.userSessionStorage,
@@ -33,8 +39,11 @@ class GetxHomeController extends GetxController implements HomeController {
   }
 
   @override
-  Future<void> onTrocarAcessoSelected() async {
-    await Get.dialog(const TrocarAcessoConfirmDialog());
+  Future<void> onAlterarAcessoSelected() async {
+    await Get.dialog(const AlterarAcessoConfirmDialog(), barrierColor: Colors.transparent);
+
+    tabController.jumpToTab(0);
+    _currentTab.value = 0;
   }
 
   @override

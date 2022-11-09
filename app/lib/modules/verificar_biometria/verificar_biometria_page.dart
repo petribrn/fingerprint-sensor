@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class VerificarBiometriaPage extends StatelessWidget {
   const VerificarBiometriaPage({Key? key}) : super(key: key);
@@ -8,7 +9,7 @@ class VerificarBiometriaPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Verificar'),
+        title: Text('Verificar', style: Get.textTheme.headline6),
       ),
       body: Container(),
     );

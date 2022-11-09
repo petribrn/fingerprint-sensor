@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SobrePage extends StatelessWidget {
   const SobrePage({Key? key}) : super(key: key);
@@ -8,7 +9,7 @@ class SobrePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Sobre'),
+        title: Text('Sobre', style: Get.textTheme.headline6),
       ),
       body: Container(),
     );

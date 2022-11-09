@@ -15,7 +15,7 @@ class BottomNavigationBarUtils {
         const VerificarBiometriaPage(),
         const VisualizarHistoricoPage(),
       ],
-      Container(),
+      const EmptyPage(),
       const SobrePage(),
     ];
   }
@@ -25,27 +25,36 @@ class BottomNavigationBarUtils {
       PersistentBottomNavBarItem(
         icon: accessMode == AccessMode.cadastro_biometria ? const Icon(Icons.add) : const Icon(Icons.fingerprint),
         title: accessMode == AccessMode.cadastro_biometria ? 'Cadastrar' : 'Verificar',
-        activeColorPrimary: AppColors.greenPrimary,
-        inactiveColorPrimary: AppColors.blackInactive,
+        activeColorPrimary: AppColors.greenCheck,
+        inactiveColorPrimary: AppColors.greySmoke,
       ),
       PersistentBottomNavBarItem(
         icon: accessMode == AccessMode.cadastro_biometria ? const Icon(Icons.storage) : const Icon(Icons.history),
         title: accessMode == AccessMode.cadastro_biometria ? 'Salvos' : 'Histórico',
-        activeColorPrimary: AppColors.greenPrimary,
-        inactiveColorPrimary: AppColors.blackInactive,
+        activeColorPrimary: AppColors.greenCheck,
+        inactiveColorPrimary: AppColors.greySmoke,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.swap_horiz),
         title: 'Alterar acesso',
-        activeColorPrimary: AppColors.greenPrimary,
-        inactiveColorPrimary: AppColors.blackInactive,
+        activeColorPrimary: AppColors.greenCheck,
+        inactiveColorPrimary: AppColors.greySmoke,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.info_outline),
         title: 'Sobre',
-        activeColorPrimary: AppColors.greenPrimary,
-        inactiveColorPrimary: AppColors.blackInactive,
+        activeColorPrimary: AppColors.greenCheck,
+        inactiveColorPrimary: AppColors.greySmoke,
       ),
     ];
+  }
+}
+
+class EmptyPage extends StatelessWidget {
+  const EmptyPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(decoration: const BoxDecoration(color: AppColors.primaryLight));
   }
 }

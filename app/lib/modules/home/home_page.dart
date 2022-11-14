@@ -17,10 +17,10 @@ class HomePage extends GetView<HomeController> {
         controller: controller.tabController,
         screens: controller.getBottomNavigationBarPages(controller.currentMode),
         items: controller.getBottomNavigationBarItems(controller.currentMode),
-        onItemSelected: (value) async {
-          controller.currentTab = value;
+        onItemSelected: (tab) async {
+          controller.currentTab = tab;
 
-          if (value == 2) {
+          if (tab == 2) {
             await controller.onAlterarAcessoSelected();
           }
         },
@@ -40,17 +40,6 @@ class HomePage extends GetView<HomeController> {
           duration: Duration(milliseconds: 200),
         ),
         navBarStyle: NavBarStyle.style3,
-        floatingActionButton: controller.currentTab == 0
-            ? (controller.currentMode == AccessMode.cadastro_biometria
-                ? FloatingActionButton(
-                    onPressed: () => () {},
-                    child: const Icon(Icons.add),
-                  )
-                : FloatingActionButton(
-                    onPressed: () => () {},
-                    child: const Icon(Icons.fingerprint),
-                  ))
-            : null,
       ),
     );
   }

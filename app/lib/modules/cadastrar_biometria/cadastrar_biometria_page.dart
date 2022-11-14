@@ -12,6 +12,13 @@ class CadastroBiometriaPage extends StatelessWidget {
         title: Text('Cadastrar', style: Get.textTheme.headline6),
       ),
       body: Container(),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.add),
+        ),
+      ),
     );
   }
 }

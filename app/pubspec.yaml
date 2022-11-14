@@ -31,6 +31,9 @@ dependencies:
   # Linter
   analyzer: ^4.1.0
 
+  # Connectivity
+  connectivity: ^3.0.6
+
   # Other
   equatable: ^2.0.5
   package_info_plus: ^3.0.2

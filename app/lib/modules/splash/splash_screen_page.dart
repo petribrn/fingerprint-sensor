@@ -18,9 +18,9 @@ class SplashScreenPage extends GetView<SplashScreenController> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset('assets/images/biometria.png'),
+            Image.asset('assets/images/fingerprint.png'),
             const SizedBox(height: 20),
-            Text('Leitor Biométrico', style: Get.textTheme.headline4),
+            Text('Sensor Biométrico', style: Get.textTheme.headline4),
             const SizedBox(height: 24),
             Obx(
               () => controller.isLoading

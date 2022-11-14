@@ -19,11 +19,12 @@ class GetxSplashScreenController extends GetxController implements SplashScreenC
   Future<void> onReady() async {
     super.onReady();
 
-    // Load core data
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(milliseconds: 800));
 
     final isFirstUse = await userSessionStorage.isFirstAppUse();
     _isLoading.value = false;
+
+    await Future.delayed(const Duration(milliseconds: 600));
 
     Get.offAllNamed(isFirstUse ? AppRoutes.ACESSO : AppRoutes.HOME);
   }

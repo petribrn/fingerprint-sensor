@@ -2,7 +2,7 @@ name: fingerprint_sensor
 description: Leituras biométricas integradas a sensor
 
 version: 1.0.0+1
-release_date: 24-11-2022
+release_date: 23/11/2022
 
 publish_to: 'none'
 
@@ -33,6 +33,8 @@ dependencies:
 
   # Other
   equatable: ^2.0.5
+  package_info_plus: ^3.0.2
+  yaml: ^3.1.1
 
 dev_dependencies:
   flutter_test:
@@ -50,3 +52,4 @@ flutter:
   assets:
     - assets/images/
     - assets/lottie/
+    - pubspec.yaml

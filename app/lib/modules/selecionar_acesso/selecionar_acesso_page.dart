@@ -21,7 +21,7 @@ class SelecionarAcessoPage extends GetView<SelecionarAcessoController> {
               alignment: Alignment.centerLeft,
               child: Obx(
                 () => Text(
-                  controller.isFirstAppUse ? 'Olá usuário! Bem-vindo ao Leitor Biométrico.' : 'Alterar modo de uso',
+                  controller.isFirstAppUse ? 'Olá usuário! Bem-vindo ao Sensor Biométrico.' : 'Alterar modo de uso',
                   style: Get.textTheme.headline5,
                 ),
               ),
@@ -31,7 +31,9 @@ class SelecionarAcessoPage extends GetView<SelecionarAcessoController> {
               alignment: Alignment.centerLeft,
               child: Text('Escolha o modo de uso em que deseja utilizar o aplicativo', style: Get.textTheme.bodyText2),
             ),
-            const SizedBox(height: 36),
+            const SizedBox(height: 28),
+            const Divider(color: AppColors.greySmoke),
+            const SizedBox(height: 28),
             SizedBox(
               width: Get.width / 1.3,
               height: 84,

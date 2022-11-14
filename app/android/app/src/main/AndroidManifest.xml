@@ -2,7 +2,7 @@
     package="com.example.app">
    <application
         android:label="Fingerprint"
-        android:icon="@mipmap/ic_fingerprint_logo">
+        android:icon="@mipmap/ic_fingerprint_logo_black">
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -12,7 +12,10 @@ ThemeData makeAppTheme() {
     scaffoldBackgroundColor: AppColors.primaryDark,
     splashColor: AppColors.greySmoke,
     dividerTheme: const DividerThemeData(space: 0, color: AppColors.primary),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(backgroundColor: AppColors.greenCheck),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: AppColors.greenCheck,
+      splashColor: AppColors.greenCheckPressed,
+    ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         side: const BorderSide(color: AppColors.greenCheck),

@@ -74,6 +74,7 @@ class FingerprintCard extends StatelessWidget {
                             key: Key('${fingerprintItem.fingerprintId}'),
                             fingerprint: fingerprintItem,
                           ),
+                          const SizedBox(width: 4),
                         ],
                       ),
                     ],

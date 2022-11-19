@@ -6,18 +6,29 @@ import '../../../data/data.dart';
 
 // ignore: must_be_immutable
 class EditionDialog extends StatelessWidget {
-  final fieldKey = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> fieldKey;
   final Fingerprint fingerprint;
 
-  String nameValue = '';
+  // Not the best approach
+  final Function({
+    required String? value,
+    required Fingerprint fingerprint,
+    required GlobalKey<FormFieldState> fieldKey,
+  }) onSaved;
+
+  String? nameValue = '';
 
   EditionDialog({
     super.key,
+    required this.fieldKey,
     required this.fingerprint,
+    required this.onSaved,
   });
 
   @override
   Widget build(BuildContext context) {
+    nameValue = fingerprint.name;
+
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
       child: AlertDialog(
@@ -58,7 +69,12 @@ class EditionDialog extends StatelessWidget {
             children: [
               TextButton(
                 onPressed: () {
-                  final result = onSavePressed(nameValue);
+                  final result = onSaved(
+                    value: nameValue,
+                    fingerprint: fingerprint,
+                    fieldKey: fieldKey,
+                  );
+
                   if (result == null) return;
 
                   Get.back(result: result);
@@ -76,22 +92,5 @@ class EditionDialog extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Fingerprint? onSavePressed(String? value) {
-    final fieldCurrentState = fieldKey.currentState;
-
-    if (fieldCurrentState == null) {
-      showSnackbar(text: 'Não foi possível editar a digital. Tente novamente.');
-      return null;
-    }
-
-    final isValid = fieldCurrentState.validate();
-    if (isValid) {
-      fieldCurrentState.save();
-      return fingerprint.copyWith(name: value);
-    }
-
-    return null;
   }
 }

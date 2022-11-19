@@ -1,0 +1,4 @@
+enum FingerprintPopupMenuOptions {
+  editar,
+  excluir,
+}

@@ -7,11 +7,16 @@ ThemeData makeAppTheme() {
     primaryColor: AppColors.primary,
     primaryColorDark: AppColors.primaryDark,
     primaryColorLight: AppColors.primaryLight,
-    colorScheme: ColorScheme.fromSwatch().copyWith(primary: AppColors.primaryDark, secondary: AppColors.primary, error: AppColors.red700),
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      primary: AppColors.primaryDark,
+      secondary: AppColors.primary,
+      error: AppColors.red700,
+      surface: AppColors.primary,
+    ),
     textTheme: makeTextTheme(),
     scaffoldBackgroundColor: AppColors.primaryDark,
     splashColor: AppColors.greySmoke,
-    dividerTheme: const DividerThemeData(space: 0, color: AppColors.primary),
+    dividerTheme: const DividerThemeData(space: 0, color: AppColors.greySmoke),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: AppColors.greenCheck,
       splashColor: AppColors.greenCheckPressed,

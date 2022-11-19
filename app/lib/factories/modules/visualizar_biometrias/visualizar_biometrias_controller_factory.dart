@@ -1,6 +1,9 @@
 import '../../../contracts/contracts.dart';
 import '../../../modules/modules.dart';
+import '../../data/data.dart';
 
 VisualizarBiometriasController makeGetxVisualizarBiometriasController() {
-  return GetxVisualizarBiometriasController();
+  return GetxVisualizarBiometriasController(
+    fingerprintRepository: makeHttpFingerprintRepository(),
+  );
 }

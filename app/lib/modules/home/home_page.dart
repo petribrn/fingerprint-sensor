@@ -19,9 +19,7 @@ class HomePage extends GetView<HomeController> {
         onItemSelected: (tab) async {
           controller.currentTab = tab;
 
-          if (tab == 2) {
-            await controller.onAlterarAcessoSelected();
-          }
+          await controller.onTabSelected(tab);
         },
         backgroundColor: AppColors.primaryDark,
         decoration: const NavBarDecoration(

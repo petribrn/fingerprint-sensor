@@ -39,11 +39,15 @@ class GetxHomeController extends GetxController implements HomeController {
   }
 
   @override
-  Future<void> onAlterarAcessoSelected() async {
-    await Get.dialog(const AlterarAcessoConfirmDialog(), barrierColor: Colors.transparent);
+  Future<void> onTabSelected(int tab) async {
+    switch (tab) {
+      case 2:
+        await Get.dialog(const AlterarAcessoConfirmDialog(), barrierColor: Colors.transparent);
 
-    tabController.jumpToTab(0);
-    _currentTab.value = 0;
+        tabController.jumpToTab(0);
+        _currentTab.value = 0;
+        break;
+    }
   }
 
   @override

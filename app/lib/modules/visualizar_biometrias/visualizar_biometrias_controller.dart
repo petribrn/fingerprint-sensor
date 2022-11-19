@@ -1,11 +1,11 @@
 import 'package:connectivity/connectivity.dart';
-import 'package:fingerprint_sensor/global_widgets/connectivity_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../contracts/contracts.dart';
 import '../../core/core.dart';
 import '../../data/data.dart';
+import '../../global_widgets/global_widgets.dart';
 import 'local_widgets/local_widgets.dart';
 
 class GetxVisualizarBiometriasController extends GetxController implements VisualizarBiometriasController {
@@ -35,6 +35,18 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
 
     final fingerprintsFetched = await fingerprintRepository.fetchAllFingerprints() ?? [];
     _fingerprints.value = fingerprintsFetched..sort((f1, f2) => f1.fingerprintId.compareTo(f2.fingerprintId));
+
+    _fingerprints.value = [
+      Fingerprint(fingerprintId: 1, creationDate: DateTime(2017, 9, 7)),
+      Fingerprint(fingerprintId: 8, creationDate: DateTime(2021, 9, 7)),
+      Fingerprint(fingerprintId: 2, creationDate: DateTime(2018, 9, 7)),
+      Fingerprint(fingerprintId: 9, creationDate: DateTime(2021, 9, 7)),
+      Fingerprint(fingerprintId: 3, name: 'André de Souza', creationDate: DateTime(2019, 9, 7)),
+      Fingerprint(fingerprintId: 4, creationDate: DateTime(2020, 9, 7)),
+      Fingerprint(fingerprintId: 5, creationDate: DateTime(2021, 9, 7)),
+      Fingerprint(fingerprintId: 6, creationDate: DateTime(2021, 9, 7)),
+      Fingerprint(fingerprintId: 7, creationDate: DateTime(2021, 9, 7)),
+    ]..sort((f1, f2) => f1.fingerprintId.compareTo(f2.fingerprintId));
   }
 
   @override

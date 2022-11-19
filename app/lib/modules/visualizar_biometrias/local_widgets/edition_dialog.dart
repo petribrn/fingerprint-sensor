@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../core/core.dart';
 import '../../../data/data.dart';
+import '../../../global_widgets/global_widgets.dart';
 
 // ignore: must_be_immutable
 class EditionDialog extends StatelessWidget {
@@ -27,12 +28,10 @@ class EditionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    nameValue = fingerprint.name;
-
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
-      child: AlertDialog(
-        title: Text('Editar digital', style: Get.textTheme.headline5),
+      child: DefaultDialog(
+        title: 'Editar digital',
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -42,7 +41,7 @@ class EditionDialog extends StatelessWidget {
                 child: TextFormField(
                   key: fieldKey,
                   enabled: true,
-                  initialValue: fingerprint.name,
+                  initialValue: fingerprint.name ?? '',
                   decoration: getTextFormFieldDecoration(
                     hintText: 'Nome da digital',
                     icon: Icons.label_outline,
@@ -62,34 +61,20 @@ class EditionDialog extends StatelessWidget {
             }),
           ],
         ),
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
-        actions: [
-          Wrap(
-            textDirection: TextDirection.rtl,
-            children: [
-              TextButton(
-                onPressed: () {
-                  final result = onSaved(
-                    value: nameValue,
-                    fingerprint: fingerprint,
-                    fieldKey: fieldKey,
-                  );
+        mainButtonText: 'Salvar',
+        mainButtonCallback: () {
+          final result = onSaved(
+            value: nameValue,
+            fingerprint: fingerprint,
+            fieldKey: fieldKey,
+          );
 
-                  if (result == null) return;
+          if (result == null) return;
 
-                  Get.back(result: result);
-                },
-                style: const ButtonStyle(overlayColor: MaterialStatePropertyAll(AppColors.primary)),
-                child: Text('Salvar', style: Get.textTheme.subtitle1),
-              ),
-              TextButton(
-                onPressed: () => Get.back(result: null),
-                style: const ButtonStyle(overlayColor: MaterialStatePropertyAll(AppColors.primary)),
-                child: Text('Cancelar', style: Get.textTheme.subtitle1),
-              ),
-            ],
-          ),
-        ],
+          Get.back(result: result);
+        },
+        secondaryButtonText: 'Cancelar',
+        secondaryButtonCallback: () => Get.back(result: null),
       ),
     );
   }

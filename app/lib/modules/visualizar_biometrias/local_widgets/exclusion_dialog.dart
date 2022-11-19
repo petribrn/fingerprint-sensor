@@ -10,7 +10,10 @@ class ExclusionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultDialog(
       title: 'Excluir a digital?',
-      content: 'A digital cadastrada será excluída permanentemente.',
+      content: Text(
+        'A digital cadastrada será excluída permanentemente.',
+        style: Get.textTheme.subtitle1,
+      ),
       mainButtonText: 'Confirmar',
       mainButtonCallback: () => Get.back(result: true),
       secondaryButtonText: 'Cancelar',

@@ -10,7 +10,7 @@ abstract class HomeController {
   int get currentTab;
   set currentTab(int newTab);
 
-  Future<void> onAlterarAcessoSelected();
+  Future<void> onTabSelected(int tab);
   List<Widget> getBottomNavigationBarPages(AccessMode accessMode);
   List<PersistentBottomNavBarItem> getBottomNavigationBarItems(AccessMode accessMode);
 }

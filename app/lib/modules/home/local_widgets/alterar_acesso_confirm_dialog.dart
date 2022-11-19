@@ -11,7 +11,10 @@ class AlterarAcessoConfirmDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultDialog(
       title: 'Alterar acesso?',
-      content: 'Você será redirecionado para outra tela.',
+      content: Text(
+        'Você será redirecionado para outra tela.',
+        style: Get.textTheme.subtitle1,
+      ),
       mainButtonText: 'Confirmar',
       secondaryButtonText: 'Cancelar',
       mainButtonCallback: () async => await Get.offAllNamed(AppRoutes.ACESSO),

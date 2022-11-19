@@ -5,7 +5,7 @@ import '../core/core.dart';
 
 class DefaultDialog extends StatelessWidget {
   final String title;
-  final String content;
+  final Widget content;
 
   final String mainButtonText;
   final String? secondaryButtonText;
@@ -27,7 +27,7 @@ class DefaultDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(title, style: Get.textTheme.headline5),
-      content: Text(content, style: Get.textTheme.subtitle1),
+      content: content,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
       actions: [
         Wrap(
@@ -36,13 +36,13 @@ class DefaultDialog extends StatelessWidget {
             TextButton(
               onPressed: mainButtonCallback,
               style: const ButtonStyle(overlayColor: MaterialStatePropertyAll(AppColors.primary)),
-              child: Text(mainButtonText, style: Get.textTheme.subtitle1),
+              child: Text(mainButtonText, style: Get.textTheme.button),
             ),
             if (secondaryButtonText != null && secondaryButtonCallback != null)
               TextButton(
                 onPressed: secondaryButtonCallback,
                 style: const ButtonStyle(overlayColor: MaterialStatePropertyAll(AppColors.primary)),
-                child: Text(secondaryButtonText!, style: Get.textTheme.subtitle1),
+                child: Text(secondaryButtonText!, style: Get.textTheme.button),
               ),
           ],
         ),

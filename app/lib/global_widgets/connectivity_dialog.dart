@@ -10,7 +10,10 @@ class ConnectivityDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultDialog(
       title: 'Conexão perdida',
-      content: 'Sua conexão com a internet falhou e algumas funcionalidades podem apresentar mau funcionamento.',
+      content: Text(
+        'Sua conexão com a internet falhou e algumas funcionalidades podem apresentar mau funcionamento.',
+        style: Get.textTheme.subtitle1,
+      ),
       mainButtonText: 'Entendi',
       mainButtonCallback: () => Get.back(),
     );

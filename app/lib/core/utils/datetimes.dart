@@ -1,5 +1,5 @@
 extension DateTimeExtension on DateTime {
-  String get formatted {
+  String get formattedDate {
     var dayString = '$day';
     var monthString = '$month';
 
@@ -7,5 +7,15 @@ extension DateTimeExtension on DateTime {
     if (month < 10) monthString = '0$monthString';
 
     return '$dayString/$monthString/$year';
+  }
+
+  String get formattedTime {
+    var hourString = '$hour';
+    var minuteString = '$minute';
+
+    if (hour < 10) hourString = '0$hourString';
+    if (minute < 10) minuteString = '0$minuteString';
+
+    return '$hourString:$minuteString';
   }
 }

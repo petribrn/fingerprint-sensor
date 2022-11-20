@@ -62,7 +62,7 @@ class FingerprintCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              'Cadastrado em: ${fingerprintItem.creationDate.formatted}',
+                              'Cadastrado em: ${fingerprintItem.creationDate.formattedDate}',
                               style: Get.textTheme.subtitle1?.copyWith(
                                 color: AppColors.greySmoke.withOpacity(0.5),
                                 fontStyle: FontStyle.italic,

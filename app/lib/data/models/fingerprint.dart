@@ -19,7 +19,7 @@ class Fingerprint extends Equatable {
     return Fingerprint(
       fingerprintId: json['fingerprint_id'] as int,
       name: json['name'] as String,
-      creationDate: json['data_criacao'] as DateTime,
+      creationDate: (json['creation_date'] as String).toDateTime,
     );
   }
 
@@ -27,7 +27,7 @@ class Fingerprint extends Equatable {
     return {
       'fingerprint_id': fingerprintId,
       'name': name,
-      'data_criacao': creationDate.formatted,
+      'creation_date': creationDate.formattedDate,
     };
   }
 

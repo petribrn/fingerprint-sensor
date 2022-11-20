@@ -32,7 +32,7 @@ class VisualizarBiometriasPage extends GetView<VisualizarBiometriasController> {
                 child: Obx(
                   () => Column(
                     children: [
-                      if (controller.fingerprints.isEmpty)
+                      if (controller.fingerprintsToShow.isEmpty)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisSize: MainAxisSize.min,
@@ -71,14 +71,14 @@ class VisualizarBiometriasPage extends GetView<VisualizarBiometriasController> {
                             shrinkWrap: true,
                             physics: const AlwaysScrollableScrollPhysics(),
                             separatorBuilder: (_, __) => const SizedBox(height: 16),
-                            itemCount: controller.fingerprints.length,
+                            itemCount: controller.fingerprintsToShow.length,
                             itemBuilder: (_, i) {
-                              final fingerprintItem = controller.fingerprints[i];
+                              final fingerprintItem = controller.fingerprintsToShow[i];
 
                               return Padding(
                                 padding: EdgeInsets.only(
                                   top: (i == 0) ? 16 : 0,
-                                  bottom: (i == controller.fingerprints.length - 1) ? 42 : 0,
+                                  bottom: (i == controller.fingerprintsToShow.length - 1) ? 42 : 0,
                                 ),
                                 child: Obx(
                                   () => controller.isLoading

@@ -22,10 +22,15 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
   });
 
   final _fingerprints = <Fingerprint>[].obs;
+  final _fingerprintsToShow = <Fingerprint>[].obs;
+
   final _isLoading = true.obs;
 
   @override
   List<Fingerprint> get fingerprints => _fingerprints;
+
+  @override
+  List<Fingerprint> get fingerprintsToShow => _fingerprintsToShow;
 
   @override
   bool get isLoading => _isLoading.value;
@@ -55,7 +60,9 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
     _isLoading.value = true;
 
     final fingerprintsFetched = await fingerprintRepository.fetchAllFingerprints() ?? [];
-    _fingerprints.value = fingerprintsFetched..sort((f1, f2) => f1.fingerprintId.compareTo(f2.fingerprintId));
+
+    // Sorting by latest creation date
+    _fingerprints.value = fingerprintsFetched..sort((f1, f2) => f2.creationDate.compareTo(f1.creationDate));
 
     // Remove this mocks when API is fully integrated
     _fingerprints.value = [
@@ -66,9 +73,11 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
       Fingerprint(fingerprintId: 3, name: 'André de Souza', creationDate: DateTime(2019, 9, 7)),
       Fingerprint(fingerprintId: 4, creationDate: DateTime(2020, 9, 7)),
       Fingerprint(fingerprintId: 5, creationDate: DateTime(2021, 9, 7)),
-      Fingerprint(fingerprintId: 6, creationDate: DateTime(2021, 9, 7)),
+      Fingerprint(fingerprintId: 6, name: 'Franco Tavares', creationDate: DateTime(2021, 9, 7)),
       Fingerprint(fingerprintId: 7, creationDate: DateTime(2021, 9, 7)),
-    ]..sort((f1, f2) => f1.fingerprintId.compareTo(f2.fingerprintId));
+    ]..sort((f1, f2) => f2.creationDate.compareTo(f1.creationDate));
+
+    _fingerprintsToShow.value = _fingerprints;
 
     await Future.delayed(const Duration(milliseconds: 1200));
     _isLoading.value = false;
@@ -92,7 +101,7 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
       ).toList();
 
       if (fingerprintsFiltered.isNotEmpty) {
-        _fingerprints.value = fingerprintsFiltered;
+        _fingerprintsToShow.value = fingerprintsFiltered;
       }
     }
   }

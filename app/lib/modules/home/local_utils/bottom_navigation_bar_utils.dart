@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fingerprint_sensor/modules/modules.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -6,6 +8,9 @@ import '../../../core/core.dart';
 import '../../../data/data.dart';
 
 class BottomNavigationBarUtils {
+  final onTabChangedStreamController = StreamController<AccessMode>();
+  Stream<AccessMode?> get onTabChangedStream => onTabChangedStreamController.stream;
+
   List<Widget> getBottomNavigationBarPages(AccessMode accessMode) {
     return [
       if (accessMode == AccessMode.cadastro_biometria) ...[

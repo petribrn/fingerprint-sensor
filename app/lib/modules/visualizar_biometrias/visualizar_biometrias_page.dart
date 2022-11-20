@@ -23,74 +23,76 @@ class VisualizarBiometriasPage extends GetView<VisualizarBiometriasController> {
             backgroundColor: AppColors.primaryLight,
             color: AppColors.greenCheck,
             strokeWidth: 3,
-            onRefresh: () async {
-              await Future.delayed(const Duration(milliseconds: 600));
-              await controller.reloadData();
-            },
+            onRefresh: () async => await controller.reloadData(),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              child: SafeArea(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                  height: MediaQuery.of(context).size.height,
-                  child: Obx(
-                    () => Column(
-                      children: [
-                        if (controller.fingerprints.isEmpty)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Você não possui nenhuma digital cadastrada.',
-                                style: Get.textTheme.subtitle1?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.greySmoke,
-                                ),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                height: MediaQuery.of(context).size.height,
+                child: Obx(
+                  () => Column(
+                    children: [
+                      if (controller.fingerprints.isEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Você não possui nenhuma digital cadastrada.',
+                              style: Get.textTheme.subtitle1?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.greySmoke,
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Inicie um cadastro na aba "Cadastrar"',
-                                style: Get.textTheme.bodyText1?.copyWith(
-                                  fontWeight: FontWeight.w400,
-                                  fontStyle: FontStyle.italic,
-                                  color: AppColors.greySmoke.withOpacity(0.64),
-                                ),
-                              ),
-                            ],
-                          )
-                        else ...[
-                          TextFormField(
-                            enabled: true,
-                            onFieldSubmitted: controller.onSearchFieldSubmitted,
-                            decoration: getTextFormFieldDecoration(
-                              hintText: 'Nome da digital',
-                              icon: Icons.search,
                             ),
-                            keyboardType: TextInputType.text,
+                            const SizedBox(height: 4),
+                            Text(
+                              'Inicie um cadastro na aba "Cadastrar"',
+                              style: Get.textTheme.bodyText1?.copyWith(
+                                fontWeight: FontWeight.w400,
+                                fontStyle: FontStyle.italic,
+                                color: AppColors.greySmoke.withOpacity(0.64),
+                              ),
+                            ),
+                          ],
+                        )
+                      else ...[
+                        TextFormField(
+                          enabled: true,
+                          onFieldSubmitted: controller.onSearchFieldSubmitted,
+                          decoration: getTextFormFieldDecoration(
+                            hintText: 'Nome da digital',
+                            icon: Icons.search,
                           ),
-                          const Divider(),
-                          Flexible(
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              separatorBuilder: (_, __) => const SizedBox(height: 16),
-                              itemCount: controller.fingerprints.length,
-                              itemBuilder: (_, i) {
-                                final fingerprintItem = controller.fingerprints[i];
+                          keyboardType: TextInputType.text,
+                        ),
+                        const Divider(),
+                        Flexible(
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            separatorBuilder: (_, __) => const SizedBox(height: 16),
+                            itemCount: controller.fingerprints.length,
+                            itemBuilder: (_, i) {
+                              final fingerprintItem = controller.fingerprints[i];
 
-                                return Padding(
-                                  padding: EdgeInsets.only(top: i == 0 ? 16 : 0),
-                                  child: FingerprintCard(
-                                    fingerprintItem: fingerprintItem,
-                                  ),
-                                );
-                              },
-                            ),
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  top: (i == 0) ? 16 : 0,
+                                  bottom: (i == controller.fingerprints.length - 1) ? 42 : 0,
+                                ),
+                                child: Obx(
+                                  () => controller.isLoading
+                                      ? const FingerprintCardLoading()
+                                      : FingerprintCard(
+                                          fingerprintItem: fingerprintItem,
+                                        ),
+                                ),
+                              );
+                            },
                           ),
-                        ]
-                      ],
-                    ),
+                        ),
+                      ]
+                    ],
                   ),
                 ),
               ),

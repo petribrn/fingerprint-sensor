@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,36 +8,56 @@ import '../../contracts/contracts.dart';
 import '../../core/core.dart';
 import '../../data/data.dart';
 import '../../global_widgets/global_widgets.dart';
-import 'local_widgets/local_widgets.dart';
+import '../modules.dart';
 
 class GetxVisualizarBiometriasController extends GetxController implements VisualizarBiometriasController {
   final FingerprintRepository fingerprintRepository;
+  final BottomNavigationBarUtils bottomNavigationBarUtils;
+
+  StreamSubscription? tabSubscription;
 
   GetxVisualizarBiometriasController({
     required this.fingerprintRepository,
+    required this.bottomNavigationBarUtils,
   });
 
   final _fingerprints = <Fingerprint>[].obs;
+  final _isLoading = true.obs;
 
   @override
   List<Fingerprint> get fingerprints => _fingerprints;
 
   @override
+  bool get isLoading => _isLoading.value;
+
+  @override
   Future<void> onReady() async {
     super.onReady();
 
+    _initOnPageOpenListener();
     await _fetchFingerprints();
+  }
+
+  void _initOnPageOpenListener() {
+    tabSubscription = bottomNavigationBarUtils.onTabChangedStream.listen((mode) async {
+      if (mode == AccessMode.cadastro_biometria) {
+        await _fetchFingerprints();
+      }
+    });
   }
 
   Future<void> _fetchFingerprints() async {
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
-      return Get.dialog(const ConnectivityDialog());
+      return await Get.dialog(const ConnectivityDialog());
     }
+
+    _isLoading.value = true;
 
     final fingerprintsFetched = await fingerprintRepository.fetchAllFingerprints() ?? [];
     _fingerprints.value = fingerprintsFetched..sort((f1, f2) => f1.fingerprintId.compareTo(f2.fingerprintId));
 
+    // Remove this mocks when API is fully integrated
     _fingerprints.value = [
       Fingerprint(fingerprintId: 1, creationDate: DateTime(2017, 9, 7)),
       Fingerprint(fingerprintId: 8, creationDate: DateTime(2021, 9, 7)),
@@ -47,6 +69,9 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
       Fingerprint(fingerprintId: 6, creationDate: DateTime(2021, 9, 7)),
       Fingerprint(fingerprintId: 7, creationDate: DateTime(2021, 9, 7)),
     ]..sort((f1, f2) => f1.fingerprintId.compareTo(f2.fingerprintId));
+
+    await Future.delayed(const Duration(milliseconds: 1200));
+    _isLoading.value = false;
   }
 
   @override
@@ -128,5 +153,12 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
     }
 
     return null;
+  }
+
+  @override
+  Future<void> onClose() async {
+    super.onClose();
+
+    await tabSubscription?.cancel();
   }
 }

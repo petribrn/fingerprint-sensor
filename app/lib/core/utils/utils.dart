@@ -1,3 +1,4 @@
+export 'bindings.dart';
 export 'datetimes.dart';
 export 'decorations.dart';
 export 'enum_converters.dart';

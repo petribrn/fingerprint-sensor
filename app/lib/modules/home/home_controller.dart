@@ -41,6 +41,13 @@ class GetxHomeController extends GetxController implements HomeController {
   @override
   Future<void> onTabSelected(int tab) async {
     switch (tab) {
+      case 1:
+        if (currentMode == AccessMode.cadastro_biometria && BindingsUtils.isVisualizarBiometriasControllerRegistered) {
+          bottomNavigationBarUtils.onTabChangedStreamController.add(AccessMode.cadastro_biometria);
+        } else if (currentMode == AccessMode.verificar_biometria && BindingsUtils.isVisualizarHistoricoControllerRegistered) {
+          bottomNavigationBarUtils.onTabChangedStreamController.add(AccessMode.verificar_biometria);
+        }
+        break;
       case 2:
         await Get.dialog(const AlterarAcessoConfirmDialog(), barrierColor: Colors.transparent);
 

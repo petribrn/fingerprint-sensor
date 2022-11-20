@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:get/get.dart';
 
 import '../../contracts/contracts.dart';
+import '../../core/core.dart';
 import '../../data/data.dart';
 import '../../global_widgets/global_widgets.dart';
 import '../modules.dart';
@@ -20,14 +22,26 @@ class GetxVisualizarHistoricoController extends GetxController implements Visual
     required this.bottomNavigationBarUtils,
   });
 
-  final _historyRecords = <HistoryRecord>[].obs;
+  final _historyRecords = <String, List<HistoryRecord>>{}.obs;
   final _isLoading = true.obs;
 
   @override
-  List<HistoryRecord> get historyRecords => _historyRecords;
+  RxMap<String, List<HistoryRecord>> get historyRecordsRx => _historyRecords;
+
+  @override
+  Map<String, List<HistoryRecord>> get historyRecords => _historyRecords;
 
   @override
   bool get isLoading => _isLoading.value;
+
+  @override
+  int get latestDayReadCount {
+    if (historyRecords.entries.isEmpty) {
+      return 0;
+    }
+
+    return historyRecords.entries.first.value.length;
+  }
 
   @override
   Future<void> onReady() async {
@@ -56,10 +70,10 @@ class GetxVisualizarHistoricoController extends GetxController implements Visual
     // final historyRecordsFetched = await fingerprintRepository.fetchAllFingerprints() ?? [];
 
     // Sorting by latest creation date
-    // _historyRecords.value = historyRecordsFetched..sort((f1, f2) => f2.creationDate.compareTo(f1.creationDate));
+    // _historyRecords.value = historyRecordsFetched..sort((f1, f2) => f2.readDate.compareTo(f1.readDate));
 
     // Remove this mocks when API is fully integrated
-    _historyRecords.value = [
+    final historyRecordsRaw = <HistoryRecord>[
       HistoryRecord(fingerprint: Fingerprint(fingerprintId: 1, creationDate: DateTime(2017, 9, 7)), readDate: DateTime(2021, 9, 7, 14, 55)),
       HistoryRecord(fingerprint: Fingerprint(fingerprintId: 8, creationDate: DateTime(2021, 9, 7)), readDate: DateTime(2022, 9, 7, 19, 7)),
       HistoryRecord(fingerprint: Fingerprint(fingerprintId: 2, creationDate: DateTime(2018, 9, 7)), readDate: DateTime(2022, 10, 21, 8, 3)),
@@ -74,6 +88,9 @@ class GetxVisualizarHistoricoController extends GetxController implements Visual
           readDate: DateTime(2022, 11, 20, 11, 33)),
       HistoryRecord(fingerprint: Fingerprint(fingerprintId: 7, creationDate: DateTime(2021, 9, 7)), readDate: DateTime(2022, 11, 20, 15, 15)),
     ]..sort((f1, f2) => f2.readDate.compareTo(f1.readDate));
+
+    _historyRecords.value = groupBy<HistoryRecord, String>(historyRecordsRaw, (record) => record.readDate.formattedDate);
+    update(['header']);
 
     await Future.delayed(const Duration(milliseconds: 1200));
     _isLoading.value = false;

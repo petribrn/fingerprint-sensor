@@ -44,7 +44,7 @@ class VisualizarBiometriasPage extends GetView<VisualizarBiometriasController> {
                                 color: AppColors.greySmoke,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 8),
                             Text(
                               'Inicie um cadastro na aba "Cadastrar"',
                               style: Get.textTheme.bodyText1?.copyWith(

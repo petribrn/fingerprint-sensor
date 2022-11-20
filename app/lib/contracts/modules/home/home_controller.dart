@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../../../data/data.dart';
 
-abstract class HomeController {
+abstract class HomeController implements GetxController {
   PersistentTabController get tabController;
   AccessMode get currentMode;
 

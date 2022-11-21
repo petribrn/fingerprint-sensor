@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'default_dialog.dart';
+import '../default_dialog.dart';
 
-class ConnectivityDialog extends StatelessWidget {
-  const ConnectivityDialog({super.key});
+class SensorConnectionDialog extends StatelessWidget {
+  const SensorConnectionDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
     return DefaultDialog(
-      title: 'Conexão perdida',
+      title: 'Sensor desconectado',
       content: Text(
-        'Sua conexão com a internet falhou e algumas funcionalidades podem apresentar mau funcionamento.',
+        'A conexão serial com o sensor foi perdida.',
         style: Get.textTheme.subtitle1,
       ),
       mainButtonText: 'Entendi',

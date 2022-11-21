@@ -1,6 +1,6 @@
 import '../../contracts/contracts.dart';
 import '../../factories/factories.dart';
-import '../models/models.dart';
+import '../data.dart';
 
 class HttpFingerprintRepository implements FingerprintRepository {
   HttpClient httpClientAdapter;
@@ -26,52 +26,52 @@ class HttpFingerprintRepository implements FingerprintRepository {
   }
 
   @override
-  Future<bool> sendFingerprint(Fingerprint fingerprint) async {
+  Future<Result> sendFingerprint(Fingerprint fingerprint) async {
     final url = makeApiUrl(path: 'users');
 
     try {
-      final httpResponse = await httpClientAdapter.request(
+      final fingerprintResponse = await httpClientAdapter.request(
         url: url,
         method: 'post',
         body: fingerprint.toMap(),
       );
 
-      return httpResponse == null ? false : true;
-    } on Exception catch (_) {
-      return false;
+      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
+    } on Exception catch (e) {
+      return Result.error('$e');
     }
   }
 
   @override
-  Future<bool> updateFingerprint(Fingerprint fingerprint) async {
+  Future<Result> updateFingerprint(Fingerprint fingerprint) async {
     final url = makeApiUrl(path: 'users/${fingerprint.fingerprintId}');
 
     try {
-      final httpResponse = await httpClientAdapter.request(
+      final fingerprintResponse = await httpClientAdapter.request(
         url: url,
         method: 'put',
         body: fingerprint.toMap(),
       );
 
-      return httpResponse == null ? false : true;
-    } on Exception catch (_) {
-      return false;
+      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
+    } on Exception catch (e) {
+      return Result.error('$e');
     }
   }
 
   @override
-  Future<bool> deleteFingerprint(int fingerprintId) async {
+  Future<Result> deleteFingerprint(int fingerprintId) async {
     final url = makeApiUrl(path: 'users/$fingerprintId');
 
     try {
-      final httpResponse = await httpClientAdapter.request(
+      final fingerprintResponse = await httpClientAdapter.request(
         url: url,
         method: 'delete',
       );
 
-      return httpResponse == null ? false : true;
-    } on Exception catch (_) {
-      return false;
+      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
+    } on Exception catch (e) {
+      return Result.error('$e');
     }
   }
 
@@ -91,6 +91,26 @@ class HttpFingerprintRepository implements FingerprintRepository {
       return fingerprints;
     } on Exception catch (_) {
       return null;
+    }
+  }
+
+  @override
+  Future<Result> sendMessage(String message, AccessMode accessMode) async {
+    final url = makeApiUrl(path: 'users');
+
+    try {
+      final fingerprintResponse = await httpClientAdapter.request(
+        url: url,
+        method: 'post',
+        body: {
+          'message': message,
+          'mode': accessMode.index,
+        },
+      );
+
+      return fingerprintResponse == null ? Result.empty() : Result.data('success');
+    } on Exception catch (e) {
+      return Result.error('$e');
     }
   }
 }

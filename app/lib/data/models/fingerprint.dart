@@ -7,11 +7,11 @@ class Fingerprint extends Equatable {
   final String? name;
   final DateTime creationDate;
 
-  const Fingerprint({
+  Fingerprint({
     required this.fingerprintId,
     this.name,
-    required this.creationDate,
-  });
+    creationDate,
+  }) : creationDate = creationDate ?? DateTime.now();
 
   factory Fingerprint.fromMap(Map<String, dynamic> json) {
     if (!json.containsKey('fingerprint_id')) throw Exception();

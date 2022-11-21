@@ -14,9 +14,9 @@ InputDecoration getTextFormFieldDecoration({
         color: AppColors.greySmoke.withOpacity(0.6),
       ),
     ),
-    focusedBorder: OutlineInputBorder(
+    focusedBorder: const OutlineInputBorder(
       borderSide: BorderSide(
-        color: AppColors.greySmoke.withOpacity(0.6),
+        color: AppColors.greySmoke,
       ),
     ),
     disabledBorder: const OutlineInputBorder(

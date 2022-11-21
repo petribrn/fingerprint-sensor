@@ -9,5 +9,7 @@ class GlobalBindings extends Bindings {
   @override
   void dependencies() {
     Get.put<FingerprintRepository>(makeHttpFingerprintRepository(), permanent: true);
+
+    Get.put<UserSessionStorage>(makeUserSessionStorageImpl());
   }
 }

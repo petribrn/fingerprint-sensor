@@ -92,7 +92,7 @@ class GetxVisualizarHistoricoController extends GetxController implements Visual
     _historyRecords.value = groupBy<HistoryRecord, String>(historyRecordsRaw, (record) => record.readDate.formattedDate);
     update(['header']);
 
-    await Future.delayed(const Duration(milliseconds: 1200));
+    await Future.delayed(const Duration(milliseconds: 800));
     _isLoading.value = false;
   }
 

@@ -79,7 +79,7 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
 
     _fingerprintsToShow.value = _fingerprints;
 
-    await Future.delayed(const Duration(milliseconds: 1200));
+    await Future.delayed(const Duration(milliseconds: 800));
     _isLoading.value = false;
   }
 

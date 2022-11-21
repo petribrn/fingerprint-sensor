@@ -26,6 +26,10 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
 
   @override
   Future<void> onAddFingerprintPressed() async {
+    if (_isFabDisabled.value) {
+      return showSnackbar(text: 'Aguarde o cadastro ser finalizado.');
+    }
+
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       return await Get.dialog(const ConnectivityDialog());
@@ -60,7 +64,7 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
       final resultSensor = await _checkSensorConnectionState();
 
       if (resultSensor.hasError) {
-        if (resultId.error?.contains('Connection') ?? false) {
+        if (resultSensor.error?.contains('Connection') ?? false) {
           return showSnackbar(
             text: 'Falha na conexão com o servidor. Tente novamente.',
             duration: const Duration(seconds: 3),

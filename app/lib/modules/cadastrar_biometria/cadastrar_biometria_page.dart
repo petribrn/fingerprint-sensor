@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../contracts/contracts.dart';
 import '../../core/core.dart';
 import '../../data/data.dart';
+import '../../global_widgets/global_widgets.dart';
 
 class CadastroBiometriaPage extends GetView<CadastrarBiometriaController> {
   const CadastroBiometriaPage({Key? key}) : super(key: key);
@@ -48,7 +49,13 @@ class CadastroBiometriaPage extends GetView<CadastrarBiometriaController> {
                                 stream: controller.registerFingerprintInSensor(),
                                 builder: (_, snapshot) {
                                   if (!snapshot.hasData) {
-                                    return const Text(emptyTitle);
+                                    return Text(
+                                      emptyTitle,
+                                      style: Get.textTheme.subtitle1?.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.greySmoke,
+                                      ),
+                                    );
                                   }
 
                                   final result = snapshot.data as Result;
@@ -98,18 +105,9 @@ class CadastroBiometriaPage extends GetView<CadastrarBiometriaController> {
                                             ],
                                           ),
                                         ),
-                                        ElevatedButton(
+                                        PrimaryButton(
                                           onPressed: () => controller.onFinishRegister(),
-                                          style: const ButtonStyle(
-                                            padding: MaterialStatePropertyAll(
-                                              EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                                            ),
-                                            backgroundColor: MaterialStatePropertyAll(AppColors.greenCheck),
-                                          ),
-                                          child: Text(
-                                            'Finalizar',
-                                            style: Get.textTheme.button,
-                                          ),
+                                          label: 'Finalizar',
                                         ),
                                         const SizedBox(height: 8),
                                       ],
@@ -172,6 +170,7 @@ class CadastroBiometriaPage extends GetView<CadastrarBiometriaController> {
                                                 border: Border.all(color: AppColors.greenCheck),
                                               ),
                                               child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   const Icon(
                                                     Icons.check,
@@ -190,20 +189,11 @@ class CadastroBiometriaPage extends GetView<CadastrarBiometriaController> {
                                                 ],
                                               ),
                                             ),
-                                            ElevatedButton(
+                                            PrimaryButton(
                                               onPressed: () => controller.onFinishRegister(),
-                                              style: const ButtonStyle(
-                                                padding: MaterialStatePropertyAll(
-                                                  EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                                                ),
-                                                backgroundColor: MaterialStatePropertyAll(AppColors.greenCheck),
-                                              ),
-                                              child: Text(
-                                                'Finalizar',
-                                                style: Get.textTheme.button,
-                                              ),
+                                              label: 'Finalizar',
                                             ),
-                                            const SizedBox(height: 8),
+                                            const SizedBox(height: 4),
                                           ],
                                         );
                                     }
@@ -231,7 +221,7 @@ class CadastroBiometriaPage extends GetView<CadastrarBiometriaController> {
         padding: const EdgeInsets.only(bottom: 8),
         child: Obx(
           () => FloatingActionButton(
-            onPressed: controller.isFabDisabled ? null : () async => await controller.onAddFingerprintPressed(),
+            onPressed: () async => await controller.onAddFingerprintPressed(),
             backgroundColor: controller.isFabDisabled ? AppColors.primaryLight : null,
             child: const Icon(Icons.add),
           ),

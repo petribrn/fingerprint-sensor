@@ -10,9 +10,11 @@ import 'local_widgets/local_widgets.dart';
 
 class GetxCadastrarBiometriaController extends GetxController implements CadastrarBiometriaController {
   final FingerprintRepository fingerprintRepository;
+  final NotificationRepository notificationRepository;
 
   GetxCadastrarBiometriaController({
     required this.fingerprintRepository,
+    required this.notificationRepository,
   });
 
   final _willStartRegister = false.obs;
@@ -37,9 +39,7 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
 
     final id = await showDialog<int?>(
       context: Get.context!,
-      builder: ((_) => AddFingerprintDialog(
-            fieldKey: GlobalKey<FormFieldState>(),
-          )),
+      builder: ((_) => AddFingerprintDialog()),
     );
 
     if (id != null) {
@@ -75,7 +75,7 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
       if (resultSensor.hasData) {
         final dataTyped = resultSensor.data as Map<String, dynamic>;
 
-        if (dataTyped.containsKey('sensor')) {
+        if (dataTyped.containsValue('disconnected')) {
           return await Get.dialog(const SensorConnectionDialog());
         }
       }
@@ -85,28 +85,6 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
     }
   }
 
-  @override
-  int? onFingerprintIdEntered({
-    required String? value,
-    required GlobalKey<FormFieldState> fieldKey,
-  }) {
-    final fieldCurrentState = fieldKey.currentState;
-
-    if (fieldCurrentState == null) {
-      showSnackbar(text: 'Não foi possível enviar o código. Tente novamente.');
-      return null;
-    }
-
-    final isValid = fieldCurrentState.validate();
-    if (isValid) {
-      fieldCurrentState.save();
-
-      return int.tryParse(value ?? '');
-    }
-
-    return null;
-  }
-
   Future<Result> _checkFingerprintId(int id) async {
     return await fingerprintRepository.sendFingerprint(
       Fingerprint(fingerprintId: id),
@@ -114,7 +92,12 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
   }
 
   Future<Result> _checkSensorConnectionState() async {
-    return await fingerprintRepository.sendMessage('sensor_state', AccessMode.cadastro_biometria);
+    return await notificationRepository.sendNotification(
+      {
+        'notification': 'sensor_state',
+        'mode': AccessMode.cadastro_biometria.index,
+      },
+    );
   }
 
   @override
@@ -133,14 +116,14 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
 
     await Future.delayed(const Duration(seconds: 3));
 
-    yield Result.error('Erro na leitura da digital');
+    // yield Result.error('Erro na leitura da digital');
 
-    // yield Result.data('Digital cadastrada com sucesso');
+    yield Result.data('Digital cadastrada com sucesso');
   }
 
   @override
   void onFinishRegister() {
-    _willStartRegister.value = true;
+    _willStartRegister.value = false;
     _isFabDisabled.value = false;
   }
 }

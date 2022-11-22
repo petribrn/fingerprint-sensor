@@ -195,29 +195,16 @@ class VerificarBiometriaPage extends GetView<VerificarBiometriaController> {
                 }),
               ),
             ),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.greySmoke),
+            const SizedBox(height: 16),
+            Align(
+              alignment: Alignment.center,
+              child: Obx(
+                () => PrimaryButton(
+                  onPressed: () => controller.onVerifyButtonPressed(),
+                  label: 'Ler digital',
+                  backgroundColor: controller.isVerifyButtonDisabled ? AppColors.primaryLight : null,
+                ),
               ),
-              child: LayoutBuilder(builder: (_, constraints) {
-                return Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Obx(
-                      () => PrimaryButton(
-                        onPressed: () => controller.onVerifyButtonPressed(),
-                        label: 'Ler digital',
-                        backgroundColor: controller.isVerifyButtonDisabled ? AppColors.primaryLight : null,
-                      ),
-                    ),
-                  ),
-                );
-              }),
             ),
           ],
         ),

@@ -111,9 +111,7 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
     final fingerprintEdited = await showDialog<Fingerprint?>(
       context: Get.context!,
       builder: ((_) => EditionDialog(
-            fieldKey: GlobalKey<FormFieldState>(),
             fingerprint: fingerprint,
-            onSaved: _onSavePressed,
           )),
     );
 
@@ -139,29 +137,6 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
       await fingerprintRepository.deleteFingerprint(fingerprintId);
       await reloadData();
     }
-  }
-
-  Fingerprint? _onSavePressed({
-    required String? value,
-    required Fingerprint fingerprint,
-    required GlobalKey<FormFieldState> fieldKey,
-  }) {
-    final fieldCurrentState = fieldKey.currentState;
-
-    if (fieldCurrentState == null) {
-      showSnackbar(text: 'Não foi possível editar a digital. Tente novamente.');
-      return null;
-    }
-
-    final isValid = fieldCurrentState.validate();
-    if (isValid) {
-      fieldCurrentState.save();
-
-      final fingerprintEdited = fingerprint.copyWith(name: value);
-      return fingerprintEdited;
-    }
-
-    return null;
   }
 
   @override

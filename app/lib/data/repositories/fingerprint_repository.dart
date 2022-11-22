@@ -80,37 +80,17 @@ class HttpFingerprintRepository implements FingerprintRepository {
     final url = makeApiUrl(path: 'users');
 
     try {
-      final httpResponse = await httpClientAdapter.requestAll(
+      final fingerprintsResponse = await httpClientAdapter.requestAll(
         url: url.toString(),
       );
 
-      if (httpResponse == null) return null;
+      if (fingerprintsResponse == null) return null;
 
-      final fingerprints = httpResponse.map((fingerprintMap) => Fingerprint.fromMap(fingerprintMap)).toList();
+      final fingerprints = fingerprintsResponse.map((fingerprintMap) => Fingerprint.fromMap(fingerprintMap)).toList();
 
       return fingerprints;
     } on Exception catch (_) {
       return null;
-    }
-  }
-
-  @override
-  Future<Result> sendMessage(String message, AccessMode accessMode) async {
-    final url = makeApiUrl(path: 'users');
-
-    try {
-      final fingerprintResponse = await httpClientAdapter.request(
-        url: url,
-        method: 'post',
-        body: {
-          'message': message,
-          'mode': accessMode.index,
-        },
-      );
-
-      return fingerprintResponse == null ? Result.empty() : Result.data('success');
-    } on Exception catch (e) {
-      return Result.error('$e');
     }
   }
 }

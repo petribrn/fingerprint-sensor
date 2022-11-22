@@ -5,7 +5,7 @@ import '../../../modules/modules.dart';
 
 VisualizarHistoricoController makeGetxVisualizarHistoricoController() {
   return GetxVisualizarHistoricoController(
-    fingerprintRepository: Get.find<FingerprintRepository>(),
+    historyRecordRepository: Get.find<HistoryRecordRepository>(),
     bottomNavigationBarUtils: Get.find<BottomNavigationBarUtils>(),
   );
 }

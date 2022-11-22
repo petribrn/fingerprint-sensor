@@ -11,14 +11,13 @@ import '../../global_widgets/global_widgets.dart';
 import '../modules.dart';
 
 class GetxVisualizarHistoricoController extends GetxController implements VisualizarHistoricoController {
-  // Change this to HistoryRecordRepository when it's done
-  final FingerprintRepository fingerprintRepository;
+  final HistoryRecordRepository historyRecordRepository;
   final BottomNavigationBarUtils bottomNavigationBarUtils;
 
   StreamSubscription? tabSubscription;
 
   GetxVisualizarHistoricoController({
-    required this.fingerprintRepository,
+    required this.historyRecordRepository,
     required this.bottomNavigationBarUtils,
   });
 
@@ -67,10 +66,10 @@ class GetxVisualizarHistoricoController extends GetxController implements Visual
 
     _isLoading.value = true;
 
-    // final historyRecordsFetched = await fingerprintRepository.fetchAllFingerprints() ?? [];
+    // final historyRecordsFetched = await historyRecordRepository.fetchAllHistoryRecords() ?? [];
 
     // Sorting by latest creation date
-    // _historyRecords.value = historyRecordsFetched..sort((f1, f2) => f2.readDate.compareTo(f1.readDate));
+    // final historyRecordsRaw = historyRecordsFetched..sort((f1, f2) => f2.readDate.compareTo(f1.readDate));
 
     // Remove this mocks when API is fully integrated
     final historyRecordsRaw = <HistoryRecord>[
@@ -90,7 +89,6 @@ class GetxVisualizarHistoricoController extends GetxController implements Visual
     ]..sort((f1, f2) => f2.readDate.compareTo(f1.readDate));
 
     _historyRecords.value = groupBy<HistoryRecord, String>(historyRecordsRaw, (record) => record.readDate.formattedDate);
-    update(['header']);
 
     await Future.delayed(const Duration(milliseconds: 800));
     _isLoading.value = false;

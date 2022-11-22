@@ -19,7 +19,7 @@ class HistoryRecord extends Equatable {
       fingerprint: Fingerprint(
         fingerprintId: json['fingerprint_id'] as int,
         name: json['name'] as String,
-        creationDate: json['creation_date'] as DateTime,
+        creationDate: (json['creation_date'] as String).toDateTime,
       ),
       readDate: (json['read_date'] as String).toDateTime,
     );

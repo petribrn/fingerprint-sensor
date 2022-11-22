@@ -6,5 +6,6 @@ import '../../../modules/modules.dart';
 CadastrarBiometriaController makeGetxCadastrarBiometriaController() {
   return GetxCadastrarBiometriaController(
     fingerprintRepository: Get.find<FingerprintRepository>(),
+    notificationRepository: Get.find<NotificationRepository>(),
   );
 }

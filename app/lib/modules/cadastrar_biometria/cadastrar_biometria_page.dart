@@ -14,6 +14,7 @@ class CadastroBiometriaPage extends GetView<CadastrarBiometriaController> {
     const emptyTitle = "Inicie o cadastro de uma digital clicando no botão '+' abaixo";
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Cadastrar', style: Get.textTheme.headline6),

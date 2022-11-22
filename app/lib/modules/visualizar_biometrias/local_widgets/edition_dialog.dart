@@ -9,65 +9,47 @@ import '../../../global_widgets/global_widgets.dart';
 class EditionDialog extends StatelessWidget {
   final GlobalKey<FormFieldState> fieldKey;
   final Fingerprint fingerprint;
+  final FocusNode focusNode = FocusNode(debugLabel: 'editFingerprint');
 
-  // Not the best approach
-  final Function({
-    required String? value,
-    required Fingerprint fingerprint,
-    required GlobalKey<FormFieldState> fieldKey,
-  }) onSaved;
-
-  String? nameValue = '';
+  String? nameValue;
 
   EditionDialog({
     super.key,
-    required this.fieldKey,
     required this.fingerprint,
-    required this.onSaved,
-  });
+  }) : fieldKey = GlobalKey<FormFieldState>();
 
   @override
   Widget build(BuildContext context) {
+    nameValue = fingerprint.name;
+
     return GestureDetector(
-      onTap: FocusScope.of(context).unfocus,
+      onTap: unfocusField,
       child: DefaultDialog(
         title: 'Editar digital',
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Builder(builder: (context) {
-              return FocusScope(
-                onFocusChange: (hasFocus) => fieldKey.currentState?.validate(),
-                child: TextFormField(
-                  key: fieldKey,
-                  enabled: true,
-                  initialValue: fingerprint.name ?? '',
-                  decoration: getTextFormFieldDecoration(
-                    hintText: 'Nome da digital',
-                    icon: Icons.label_outline,
-                  ),
-                  keyboardType: TextInputType.text,
-                  onFieldSubmitted: (_) => FocusScope.of(context).unfocus,
-                  onChanged: (value) => nameValue = value,
-                  validator: (value) {
-                    if (FocusScope.of(context).hasFocus) return null;
-
-                    if (value == null || value.isEmpty) return 'Obrigatório';
-
-                    return null;
-                  },
+              return TextFormField(
+                key: fieldKey,
+                enabled: true,
+                initialValue: fingerprint.name ?? '',
+                decoration: getTextFormFieldDecoration(
+                  hintText: 'Nome da digital',
+                  icon: Icons.label_outline,
                 ),
+                keyboardType: TextInputType.text,
+                focusNode: focusNode,
+                onFieldSubmitted: (_) => unfocusField(),
+                onChanged: (value) => nameValue = value,
               );
             }),
           ],
         ),
         mainButtonText: 'Salvar',
         mainButtonCallback: () {
-          final result = onSaved(
-            value: nameValue,
-            fingerprint: fingerprint,
-            fieldKey: fieldKey,
-          );
+          unfocusField();
+          final result = _onFinishEdition();
 
           if (result == null) return;
 
@@ -77,5 +59,25 @@ class EditionDialog extends StatelessWidget {
         secondaryButtonCallback: () => Get.back(result: null),
       ),
     );
+  }
+
+  void unfocusField() {
+    if (focusNode.hasFocus) {
+      focusNode.unfocus();
+    }
+  }
+
+  Fingerprint? _onFinishEdition() {
+    final fieldCurrentState = fieldKey.currentState;
+
+    if (fieldCurrentState == null) {
+      showSnackbar(text: 'Não foi possível editar a digital. Tente novamente.');
+      return null;
+    }
+
+    fieldCurrentState.save();
+
+    final fingerprintEdited = fingerprint.copyWith(name: nameValue);
+    return fingerprintEdited;
   }
 }

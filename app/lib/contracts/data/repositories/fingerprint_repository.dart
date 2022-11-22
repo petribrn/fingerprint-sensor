@@ -10,6 +10,4 @@ abstract class FingerprintRepository {
   Future<Result> deleteFingerprint(int fingerprintId);
 
   Future<List<Fingerprint>?> fetchAllFingerprints();
-
-  Future<Result> sendMessage(String message, AccessMode accessMode);
 }

@@ -8,9 +8,11 @@ import '../../global_widgets/global_widgets.dart';
 
 class GetxVerificarBiometriaController extends GetxController implements VerificarBiometriaController {
   final FingerprintRepository fingerprintRepository;
+  final NotificationRepository notificationRepository;
 
   GetxVerificarBiometriaController({
     required this.fingerprintRepository,
+    required this.notificationRepository,
   });
 
   final _willStartVerification = false.obs;
@@ -62,7 +64,12 @@ class GetxVerificarBiometriaController extends GetxController implements Verific
   }
 
   Future<Result> _checkSensorConnectionState() async {
-    return await fingerprintRepository.sendMessage('sensor_state', AccessMode.verificar_biometria);
+    return await notificationRepository.sendNotification(
+      {
+        'notification': 'sensor_state',
+        'mode': AccessMode.verificar_biometria.index,
+      },
+    );
   }
 
   @override
@@ -80,7 +87,7 @@ class GetxVerificarBiometriaController extends GetxController implements Verific
 
   @override
   void onFinishVerification() {
-    _willStartVerification.value = true;
+    _willStartVerification.value = false;
     _isVerifyButtonDisabled.value = false;
   }
 }

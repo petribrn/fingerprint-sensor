@@ -136,6 +136,8 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
     if (hasConfirmedExclusion) {
       await fingerprintRepository.deleteFingerprint(fingerprintId);
       await reloadData();
+
+      showSnackbar(text: 'Digital excluída com sucesso');
     }
   }
 

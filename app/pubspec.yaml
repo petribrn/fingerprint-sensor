@@ -13,8 +13,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2
-
   # State management
   get: ^4.6.5
 
@@ -24,6 +22,7 @@ dependencies:
   http: ^0.13.5
 
   # UI
+  cupertino_icons: ^1.0.2
   persistent_bottom_nav_bar: ^4.0.2
   flutter_staggered_animations: ^1.1.1
   shimmer: ^2.0.0

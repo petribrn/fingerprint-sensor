@@ -50,5 +50,5 @@ TextTheme makeTextTheme() {
     caption: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: color),
     overline: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: color),
     button: TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: color),
-  );
+  ).apply(fontFamily: 'Lato');
 }

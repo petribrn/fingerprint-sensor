@@ -54,5 +54,26 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/lottie/
     - pubspec.yaml
+
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato-Black.ttf
+        - asset: fonts/Lato-BlackItalic.ttf
+        - asset: fonts/Lato-Bold.ttf
+        - asset: fonts/Lato-BoldItalic.ttf
+        - asset: fonts/Lato-Hairline.ttf
+        - asset: fonts/Lato-HairlineItalic.ttf
+        - asset: fonts/Lato-Heavy.ttf
+        - asset: fonts/Lato-HeavyItalic.ttf
+        - asset: fonts/Lato-Italic.ttf
+        - asset: fonts/Lato-Light.ttf
+        - asset: fonts/Lato-LightItalic.ttf
+        - asset: fonts/Lato-Medium.ttf
+        - asset: fonts/Lato-MediumItalic.ttf
+        - asset: fonts/Lato-Regular.ttf
+        - asset: fonts/Lato-SemiBold.ttf
+        - asset: fonts/Lato-SemiBoldItalic.ttf
+        - asset: fonts/Lato-Thin.ttf
+        - asset: fonts/Lato-ThinItalic.ttf

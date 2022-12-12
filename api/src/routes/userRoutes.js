@@ -10,7 +10,7 @@ router.put('/:id', userController.update);
 router.delete('/:id', userController.delete);
 
 router.get('/check-sensor-status', userController.checkSensorStatus);
-router.get('/init-sign-up', userController.initSignUpMode);
+router.get('/init-sign-up/:id', userController.initSignUpMode);
 router.get('/first-read', userController.firstRead);
 router.get('/second-read', userController.secondRead);
 router.get('/check-fingerprint', userController.checkFingerprint);

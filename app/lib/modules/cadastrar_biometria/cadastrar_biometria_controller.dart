@@ -26,15 +26,33 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
   @override
   bool get isFabDisabled => _isFabDisabled.value;
 
+  int? _currentId;
+
   @override
   Future<void> onAddFingerprintPressed() async {
     if (_isFabDisabled.value) {
       return showSnackbar(text: 'Aguarde o cadastro ser finalizado.');
     }
 
+    // 1: Check device connectivity state
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       return await Get.dialog(const ConnectivityDialog());
+    }
+
+    // 2: Check sensor connection state
+    final resultSensor = await notificationRepository.fetchSensorState();
+
+    if (resultSensor.hasError) {
+      return showSnackbar(text: 'Falha na conexão com o servidor. Tente novamente.');
+    }
+
+    if (resultSensor.hasData) {
+      final dataTyped = resultSensor.data as Map<String, dynamic>;
+
+      if (dataTyped['data'] != true) {
+        return await Get.dialog(const SensorConnectionDialog());
+      }
     }
 
     final id = await showDialog<int?>(
@@ -43,87 +61,113 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
     );
 
     if (id != null) {
-      final resultId = await _checkFingerprintId(id);
-
-      if (resultId.hasError) {
-        if (resultId.error?.contains('Connection') ?? false) {
-          return showSnackbar(
-            text: 'Falha na conexão com o servidor. Tente novamente.',
-            duration: const Duration(seconds: 3),
-          );
-        }
-
-        if (resultId.error?.contains('existing') ?? false) {
-          return showSnackbar(
-            text: 'O código informado já pertence a uma digital cadastrada. ${resultId.error}',
-            duration: const Duration(seconds: 3),
-          );
-        }
-      }
-
-      final resultSensor = await _checkSensorConnectionState();
-
-      if (resultSensor.hasError) {
-        if (resultSensor.error?.contains('Connection') ?? false) {
-          return showSnackbar(
-            text: 'Falha na conexão com o servidor. Tente novamente.',
-            duration: const Duration(seconds: 3),
-          );
-        }
-      }
-
-      if (resultSensor.hasData) {
-        final dataTyped = resultSensor.data as Map<String, dynamic>;
-
-        if (dataTyped.containsValue('disconnected')) {
-          return await Get.dialog(const SensorConnectionDialog());
-        }
-      }
+      _currentId = id;
 
       _willStartRegister.value = true;
       _isFabDisabled.value = true;
     }
   }
 
-  Future<Result> _checkFingerprintId(int id) async {
-    return await fingerprintRepository.sendFingerprint(
-      Fingerprint(fingerprintId: id),
-    );
-  }
-
-  Future<Result> _checkSensorConnectionState() async {
-    return await notificationRepository.sendNotification(
-      {
-        'notification': 'sensor_state',
-        'mode': AccessMode.cadastro_biometria.index,
-      },
-    );
-  }
-
   @override
   Stream<Result> registerFingerprintInSensor() async* {
-    await Future.delayed(const Duration(seconds: 3));
+    try {
+      if (_currentId == null) throw Result.error('Id da digital nulo');
 
-    yield Result.data('Posicione o dedo no sensor');
+      // 3: Send id, check it and start sign up
+      final resultId = await fingerprintRepository.sendFingerprintId(_currentId!);
 
-    await Future.delayed(const Duration(seconds: 3));
+      if (resultId.hasError || resultId.isEmpty) {
+        _handleSignUpResponseError(result: resultId, errorMessage: 'Erro no envio da digital');
 
-    yield Result.data('Retire o dedo do sensor');
+        if (resultId.error == 'Fingerprint id already registered') {
+          showSnackbar(
+            text: 'O código informado já pertence a uma digital cadastrada. ${resultId.error}',
+            duration: const Duration(seconds: 3),
+          );
+        }
+      } else if (resultId.hasData) {
+        final dataTyped = resultId.data as Map<String, dynamic>;
 
-    await Future.delayed(const Duration(seconds: 3));
+        if (dataTyped['message'] == 'Success') {
+          await Future.delayed(const Duration(seconds: 2));
+          yield Result.data('Posicione o dedo no sensor');
+        }
+      }
 
-    yield Result.data('Encoste o mesmo dedo no sensor');
+      // 4: Start of first read
+      final resultFirstRead = await fingerprintRepository.executeFirstRead();
+      if (resultFirstRead.hasError || resultFirstRead.isEmpty) {
+        _handleSignUpResponseError(result: resultFirstRead, errorMessage: 'Erro na leitura da digital');
+      } else if (resultFirstRead.hasData) {
+        final dataTyped = resultId.data as Map<String, dynamic>;
 
-    await Future.delayed(const Duration(seconds: 3));
+        if (dataTyped['message'] == 'Success') {
+          await Future.delayed(const Duration(seconds: 2));
+          yield Result.data('Retire o dedo do sensor');
+        }
+      }
 
-    // yield Result.error('Erro na leitura da digital');
+      // VERIFICAR REMOÇÃO DO DEDO APÓS PRIMEIRA LEITURA
+      // '''while (fingerprintSensor.getImage() != FINGERPRINT_NOFINGER);'''
+      await Future.delayed(const Duration(seconds: 2));
+      yield Result.data('Encoste o mesmo dedo no sensor');
 
-    yield Result.data('Digital cadastrada com sucesso');
+      // 5: Start of second read
+      final resultSecondRead = await fingerprintRepository.executeSecondRead();
+
+      if (resultSecondRead.hasError || resultSecondRead.isEmpty) {
+        _handleSignUpResponseError(result: resultSecondRead, errorMessage: 'Erro na leitura da digital');
+
+        if (resultSecondRead.error == 'Could not create fingerprint') {
+          showSnackbar(
+            text: 'Erro ao criar digital no banco do sensor. ${resultSecondRead.error}',
+            duration: const Duration(seconds: 3),
+          );
+        }
+
+        if (resultSecondRead.error == 'Could not store fingerprint') {
+          showSnackbar(
+            text: 'Erro ao salvar digital no banco do sensor. ${resultSecondRead.error}',
+            duration: const Duration(seconds: 3),
+          );
+        }
+      } else if (resultSecondRead.hasData) {
+        final dataTyped = resultId.data as Map<String, dynamic>;
+
+        if (dataTyped['message'] == 'Success') {
+          await Future.delayed(const Duration(seconds: 2));
+          yield Result.data('Digital cadastrada com sucesso');
+
+          Get.dialog(
+            FinishReadDialog(
+              isCadastro: true,
+              dialogContent: FinishDialogContent(
+                id: _currentId!,
+                date: DateTime.now(),
+              ),
+            ),
+          );
+        }
+      }
+    } on Result catch (error) {
+      yield error;
+    }
   }
 
   @override
   void onFinishRegister() {
     _willStartRegister.value = false;
     _isFabDisabled.value = false;
+  }
+
+  void _handleSignUpResponseError({required Result result, required String errorMessage}) {
+    if (result.error == 'Connection lost' || result.error == 'Did not get any response from arduino') {
+      showSnackbar(
+        text: 'Falha na conexão com o servidor. Tente novamente.',
+        duration: const Duration(seconds: 2),
+      );
+    }
+
+    throw Result.error(errorMessage);
   }
 }

@@ -10,15 +10,13 @@ class HttpNotificationRepository implements NotificationRepository {
   });
 
   @override
-  Future<Result> sendNotification(Map<String, dynamic> message) async {
-    // Include a new route in API later
-    final url = makeApiUrl(path: 'notifications');
+  Future<Result> fetchSensorState() async {
+    final url = makeApiUrl(path: 'users/status');
 
     try {
       final resultNotification = await httpClientAdapter.request(
         url: url,
-        method: 'post',
-        body: message,
+        method: 'get',
       );
 
       return resultNotification == null ? Result.empty() : Result.data(resultNotification);

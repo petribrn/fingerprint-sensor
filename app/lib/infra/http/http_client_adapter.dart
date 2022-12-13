@@ -71,6 +71,7 @@ class HttpClientAdapter implements HttpClient {
     // No Content
     if (response.statusCode == 204) {
       return null;
+    // Errors
     } else if (response.statusCode == 400) {
       throw const HttpException('400 - Bad Request');
     } else if (response.statusCode == 401) {

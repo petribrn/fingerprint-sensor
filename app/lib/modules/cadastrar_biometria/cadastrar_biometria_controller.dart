@@ -61,7 +61,6 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
     );
 
     if (id != null) {
-      // 3: Send id, check it and start sign up
       _currentId = id;
 
       _willStartRegister.value = true;

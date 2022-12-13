@@ -3,7 +3,13 @@ import '../../../data/data.dart';
 abstract class FingerprintRepository {
   Future<Fingerprint?> fetchFingerprint(int fingerprintId);
 
-  Future<Result> sendFingerprint(Fingerprint fingerprint);
+  Future<Result> sendFingerprintId(int fingerprintId);
+
+  Future<Result> executeFirstRead();
+
+  Future<Result> executeSecondRead();
+
+  Future<Result> verifyFingerprint();
 
   Future<Result> updateFingerprint(Fingerprint fingerprint);
 

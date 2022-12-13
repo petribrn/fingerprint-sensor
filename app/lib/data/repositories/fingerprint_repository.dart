@@ -26,14 +26,61 @@ class HttpFingerprintRepository implements FingerprintRepository {
   }
 
   @override
-  Future<Result> sendFingerprint(Fingerprint fingerprint) async {
-    final url = makeApiUrl(path: 'users');
+  Future<Result> sendFingerprintId(int fingerprintId) async {
+    final url = makeApiUrl(path: 'users/init-sign-up/$fingerprintId');
 
     try {
       final fingerprintResponse = await httpClientAdapter.request(
         url: url,
-        method: 'post',
-        body: fingerprint.toMap(),
+        method: 'get',
+      );
+
+      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
+    } on Exception catch (e) {
+      return Result.error('$e');
+    }
+  }
+
+  @override
+  Future<Result> executeFirstRead() async {
+    final url = makeApiUrl(path: 'users/first-read');
+
+    try {
+      final fingerprintResponse = await httpClientAdapter.request(
+        url: url,
+        method: 'get',
+      );
+
+      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
+    } on Exception catch (e) {
+      return Result.error('$e');
+    }
+  }
+
+  @override
+  Future<Result> executeSecondRead() async {
+    final url = makeApiUrl(path: 'users/second-read');
+
+    try {
+      final fingerprintResponse = await httpClientAdapter.request(
+        url: url,
+        method: 'get',
+      );
+
+      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
+    } on Exception catch (e) {
+      return Result.error('$e');
+    }
+  }
+
+  @override
+  Future<Result> verifyFingerprint() async {
+    final url = makeApiUrl(path: 'users/check-fingerprint');
+
+    try {
+      final fingerprintResponse = await httpClientAdapter.request(
+        url: url,
+        method: 'get',
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);

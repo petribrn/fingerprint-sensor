@@ -18,4 +18,18 @@ extension DateTimeExtension on DateTime {
 
     return '$hourString:$minuteString';
   }
+
+  String get formattedDateTime {
+    var hourString = '$hour';
+    var minuteString = '$minute';
+    var dayString = '$day';
+    var monthString = '$month';
+
+    if (hour < 10) hourString = '0$hourString';
+    if (minute < 10) minuteString = '0$minuteString';
+    if (day < 10) dayString = '0$dayString';
+    if (month < 10) monthString = '0$monthString';
+
+    return '$dayString/$monthString/$year $hourString:$minuteString';
+  }
 }

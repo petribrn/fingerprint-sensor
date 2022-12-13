@@ -13,7 +13,7 @@ module.exports = {
         references: {
           model: {
             tableName: 'users',
-            schema: 'fingerprints',
+            schema: 'fingerprint',
           },
           key: 'name',
         },
@@ -24,7 +24,7 @@ module.exports = {
         references: {
           model: {
             tableName: 'users',
-            schema: 'fingerprints',
+            schema: 'fingerprint',
           },
           key: 'fingerprint_id',
         },

@@ -1,4 +1,5 @@
 import User from '../models/User';
+import History from '../models/History';
 import arduinoAxios from '../services/arduinoAxios';
 
 class UserController {
@@ -166,7 +167,14 @@ class UserController {
 
       if (!user) return res.json({ data: { error: 'User not found in cloud db.' } });
 
-      const { name } = user;
+      const { name, fingerprint_id } = user;
+
+      const history = await History.create({
+        fingerprint_name: name,
+        access_id: fingerprint_id,
+      });
+
+      if (!history) return res.status(400).json({ data: { error: 'Fail to register access.' } });
 
       return res.json({
         data: {

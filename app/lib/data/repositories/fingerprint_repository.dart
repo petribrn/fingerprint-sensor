@@ -82,7 +82,15 @@ class HttpFingerprintRepository implements FingerprintRepository {
 
       if (fingerprintsResponse == null) return null;
 
-      final fingerprints = fingerprintsResponse.map((fingerprintMap) => Fingerprint.fromMap(fingerprintMap)).toList();
+      final fingerprintsRaw = fingerprintsResponse.map((fingerprintMap) {
+        try {
+          return Fingerprint.fromMap(fingerprintMap);
+        } on Exception {
+          return Fingerprint(fingerprintId: -1);
+        }
+      });
+
+      final fingerprints = fingerprintsRaw.where((fingerprint) => fingerprint.fingerprintId != -1).toList();
 
       return fingerprints;
     } on Exception catch (_) {

@@ -10,22 +10,6 @@ class HttpFingerprintRepository implements FingerprintRepository {
   });
 
   @override
-  Future<Fingerprint?> fetchFingerprint(int fingerprintId) async {
-    final url = makeApiUrl(path: 'users/$fingerprintId');
-
-    try {
-      final httpResponse = await httpClientAdapter.request(
-        url: url,
-        method: 'get',
-      );
-
-      return httpResponse == null ? null : Fingerprint.fromMap(httpResponse);
-    } on Exception catch (_) {
-      return null;
-    }
-  }
-
-  @override
   Future<Result> sendFingerprintId(int fingerprintId) async {
     final url = makeApiUrl(path: 'users/init-sign-up/$fingerprintId');
 
@@ -90,6 +74,23 @@ class HttpFingerprintRepository implements FingerprintRepository {
   }
 
   @override
+  Future<List<Fingerprint>?> fetchAllFingerprints() async {
+    final url = makeApiUrl(path: 'users');
+
+    try {
+      final fingerprintsResponse = await httpClientAdapter.requestAll(url: url);
+
+      if (fingerprintsResponse == null) return null;
+
+      final fingerprints = fingerprintsResponse.map((fingerprintMap) => Fingerprint.fromMap(fingerprintMap)).toList();
+
+      return fingerprints;
+    } on Exception catch (_) {
+      return null;
+    }
+  }
+
+  @override
   Future<Result> updateFingerprint(Fingerprint fingerprint) async {
     final url = makeApiUrl(path: 'users/${fingerprint.fingerprintId}');
 
@@ -119,25 +120,6 @@ class HttpFingerprintRepository implements FingerprintRepository {
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
     } on Exception catch (e) {
       return Result.error('$e');
-    }
-  }
-
-  @override
-  Future<List<Fingerprint>?> fetchAllFingerprints() async {
-    final url = makeApiUrl(path: 'users');
-
-    try {
-      final fingerprintsResponse = await httpClientAdapter.requestAll(
-        url: url.toString(),
-      );
-
-      if (fingerprintsResponse == null) return null;
-
-      final fingerprints = fingerprintsResponse.map((fingerprintMap) => Fingerprint.fromMap(fingerprintMap)).toList();
-
-      return fingerprints;
-    } on Exception catch (_) {
-      return null;
     }
   }
 }

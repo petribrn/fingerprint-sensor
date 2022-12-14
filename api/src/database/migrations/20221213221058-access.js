@@ -1,6 +1,6 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('history', {
+    await queryInterface.createTable('access', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -10,24 +10,14 @@ module.exports = {
       fingerprint_name: {
         type: Sequelize.STRING,
         allowNull: false,
-        references: {
-          model: {
-            tableName: 'users',
-            schema: 'fingerprint',
-          },
-          key: 'name',
-        },
       },
       access_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: {
-            tableName: 'users',
-            schema: 'fingerprint',
-          },
-          key: 'fingerprint_id',
-        },
+      },
+      read_at: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       created_at: {
         type: Sequelize.DATE,
@@ -41,6 +31,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable('history');
+    await queryInterface.dropTable('access');
   },
 };

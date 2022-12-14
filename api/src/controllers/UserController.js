@@ -1,5 +1,5 @@
 import User from '../models/User';
-import History from '../models/History';
+import Access from '../models/History';
 import arduinoAxios from '../services/arduinoAxios';
 
 class UserController {
@@ -169,9 +169,14 @@ class UserController {
 
       const { name, fingerprint_id } = user;
 
-      const history = await History.create({
+      const timeElapsed = Date.now()
+      const currentDatetime = new Date(timeElapsed)
+      currentDatetime = currentDatetime.toLocaleString('pt-BR')
+
+      const access = await Access.create({
         fingerprint_name: name,
         access_id: fingerprint_id,
+        read_at: currentDatetime,
       });
 
       if (!history) return res.status(400).json({ data: { error: 'Fail to register access.' } });

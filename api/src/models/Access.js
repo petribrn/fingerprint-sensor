@@ -1,6 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 
-export default class History extends Model {
+export default class Access extends Model {
   static init(sequelize) {
     super.init({
       fingerprint_name: {
@@ -27,6 +27,16 @@ export default class History extends Model {
           max: 149,
           notNull: {
             msg: 'Access ID must not be null.',
+          },
+        },
+      },
+      read_at: {
+        type: Sequelize.STRING,
+        defaultValue: '',
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Read at must not be null.',
           },
         },
       },

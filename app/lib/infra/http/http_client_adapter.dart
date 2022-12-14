@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 
 import '../../contracts/contracts.dart';
+import '../../data/data.dart';
 
 class HttpClientAdapter implements HttpClient {
   Client client;
@@ -28,16 +29,16 @@ class HttpClientAdapter implements HttpClient {
     try {
       switch (method) {
         case 'get':
-          response = await client.get(Uri.parse(url), headers: _headers);
+          response = await client.get(Uri.parse(url), headers: _headers).timeout(const Duration(seconds: 10));
           break;
         case 'post':
-          response = await client.post(Uri.parse(url), headers: _headers, body: bodyJson);
+          response = await client.post(Uri.parse(url), headers: _headers, body: bodyJson).timeout(const Duration(seconds: 10));
           break;
         case 'put':
-          response = await client.put(Uri.parse(url), headers: _headers, body: bodyJson);
+          response = await client.put(Uri.parse(url), headers: _headers, body: bodyJson).timeout(const Duration(seconds: 10));
           break;
         case 'delete':
-          response = await client.delete(Uri.parse(url), headers: _headers);
+          response = await client.delete(Uri.parse(url), headers: _headers).timeout(const Duration(seconds: 10));
           break;
       }
     } on Exception catch (_) {
@@ -55,33 +56,38 @@ class HttpClientAdapter implements HttpClient {
     var response = Response('', 500);
 
     try {
-      response = await client.get(Uri.parse(url), headers: _headers);
-    } on Exception catch (_) {
-      rethrow;
+      response = await client.get(Uri.parse(url), headers: _headers).timeout(const Duration(seconds: 10));
+      response.body;
+    } on Exception catch (error) {
+      debugPrint('$error');
+
+      throw const InternalServerException('Conexão com o servidor perdida');
     }
 
     return _checkResponseAndReturn(response) as List<Map<String, dynamic>>?;
   }
 
   Future<dynamic> _checkResponseAndReturn(Response response) async {
+    final responseBodyDecoded = jsonDecode(response.body);
+
     // Success
     if (response.statusCode == 200) {
-      return response.body.isEmpty ? null : jsonDecode(response.body);
+      return response.body.isEmpty ? null : responseBodyDecoded;
     }
     // No Content
     if (response.statusCode == 204) {
       return null;
-    // Errors
+      // Errors
     } else if (response.statusCode == 400) {
-      throw const HttpException('400 - Bad Request');
+      throw BadRequestException(responseBodyDecoded['error'] ?? '');
     } else if (response.statusCode == 401) {
-      throw const HttpException('401 - Unauthorized');
+      throw UnAuthorizedException(responseBodyDecoded['error'] ?? '');
     } else if (response.statusCode == 403) {
-      throw const HttpException('403 - Forbidden');
+      throw ForbiddenException(responseBodyDecoded['error'] ?? '');
     } else if (response.statusCode == 404) {
-      throw const HttpException('404 - Not Found');
+      throw NotFoundException(responseBodyDecoded['error'] ?? '');
     } else {
-      throw const HttpException('500 - Server Error');
+      throw InternalServerException(responseBodyDecoded['error'] ?? '');
     }
   }
 }

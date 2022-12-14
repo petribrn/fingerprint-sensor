@@ -97,6 +97,15 @@ class UserController {
     }
   }
 
+  async accessHistory(req, res){
+    try {
+      const history = await Access.findAll({ attributes: ['access_id', 'fingerprint_name', 'read_at'] });
+      return res.json(history);
+    } catch (error) {
+      return res.json(null)
+    }
+  }
+
   async initSignUpMode(req, res) {
     try {
       if (!req.params.id) return false;

@@ -9,6 +9,8 @@ router.post('/', userController.store);
 router.put('/:id', userController.update);
 router.delete('/:id', userController.delete);
 
+router.get('/access-history', userController.accessHistory);
+
 router.get('/check-sensor-status', userController.checkSensorStatus);
 router.get('/init-sign-up/:id', userController.initSignUpMode);
 router.get('/first-read', userController.firstRead);

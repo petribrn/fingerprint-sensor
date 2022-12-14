@@ -101,7 +101,7 @@ class HttpFingerprintRepository implements FingerprintRepository {
       final fingerprintsRaw = fingerprintsResponse.map((fingerprintMap) {
         try {
           return Fingerprint.fromMap(fingerprintMap);
-        } on Exception {
+        } on AppException {
           return Fingerprint(fingerprintId: -1);
         }
       });

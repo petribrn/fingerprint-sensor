@@ -1,31 +1,31 @@
-import 'package:equatable/equatable.dart';
-
-class AppException extends Equatable implements Exception {
-  final String message;
-  final int statusCode;
-
-  const AppException(this.message, this.statusCode);
-  
-  @override
-  List<Object?> get props => [message, statusCode];
-}
+import 'base.dart';
 
 class BadRequestException extends AppException {
-  const BadRequestException(message) : super(message, 400);
+  int get statusCode => 400;
+
+  const BadRequestException(message) : super(message);
 }
 
 class UnAuthorizedException extends AppException {
-  const UnAuthorizedException(message) : super(message, 401);
+  int get statusCode => 400;
+
+  const UnAuthorizedException(message) : super(message);
 }
 
 class ForbiddenException extends AppException {
-  const ForbiddenException(message) : super(message, 403);
+  int get statusCode => 400;
+
+  const ForbiddenException(message) : super(message);
 }
 
 class NotFoundException extends AppException {
-  const NotFoundException(message) : super(message, 404);
+  int get statusCode => 400;
+
+  const NotFoundException(message) : super(message);
 }
 
 class InternalServerException extends AppException {
-  const InternalServerException(message) : super(message, 500);
+  int get statusCode => 400;
+
+  const InternalServerException(message) : super(message);
 }

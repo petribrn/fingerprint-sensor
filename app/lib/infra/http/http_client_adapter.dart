@@ -41,8 +41,10 @@ class HttpClientAdapter implements HttpClient {
           response = await client.delete(Uri.parse(url), headers: _headers).timeout(const Duration(seconds: 10));
           break;
       }
-    } on Exception catch (_) {
-      rethrow;
+    } on Exception catch (error) {
+      debugPrint('$error');
+
+      throw const InternalServerException('Conexão com o servidor perdida');
     }
 
     return _checkResponseAndReturn(response) as Map<String, dynamic>?;
@@ -57,7 +59,6 @@ class HttpClientAdapter implements HttpClient {
 
     try {
       response = await client.get(Uri.parse(url), headers: _headers).timeout(const Duration(seconds: 10));
-      response.body;
     } on Exception catch (error) {
       debugPrint('$error');
 

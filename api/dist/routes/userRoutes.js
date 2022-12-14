@@ -9,8 +9,10 @@ router.post('/', _UserController2.default.store);
 router.put('/:id', _UserController2.default.update);
 router.delete('/:id', _UserController2.default.delete);
 
+router.get('/access-history', _UserController2.default.accessHistory);
+
 router.get('/check-sensor-status', _UserController2.default.checkSensorStatus);
-router.get('/init-sign-up', _UserController2.default.initSignUpMode);
+router.get('/init-sign-up/:id', _UserController2.default.initSignUpMode);
 router.get('/first-read', _UserController2.default.firstRead);
 router.get('/second-read', _UserController2.default.secondRead);
 router.get('/check-fingerprint', _UserController2.default.checkFingerprint);

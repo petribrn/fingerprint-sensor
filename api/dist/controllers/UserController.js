@@ -1,4 +1,5 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _User = require('../models/User'); var _User2 = _interopRequireDefault(_User);
+var _Access = require('../models/Access'); var _Access2 = _interopRequireDefault(_Access);
 var _arduinoAxios = require('../services/arduinoAxios'); var _arduinoAxios2 = _interopRequireDefault(_arduinoAxios);
 
 class UserController {
@@ -21,7 +22,7 @@ class UserController {
 
   async index(req, res) {
     try {
-      const users = await _User2.default.findAll({ attributes: ['name', 'fingerprint_id'] });
+      const users = await _User2.default.findAll({ attributes: ['name', 'fingerprint_id', 'created_at'] });
       return res.json(users);
     } catch (error) {
       return res.json(null);
@@ -96,6 +97,15 @@ class UserController {
     }
   }
 
+  async accessHistory(req, res) {
+    try {
+      const history = await _Access2.default.findAll({ attributes: ['access_id', 'fingerprint_name', 'read_at'] });
+      return res.json(history);
+    } catch (error) {
+      return res.json(null);
+    }
+  }
+
   async initSignUpMode(req, res) {
     try {
       if (!req.params.id) return false;
@@ -166,7 +176,19 @@ class UserController {
 
       if (!user) return res.json({ data: { error: 'User not found in cloud db.' } });
 
-      const { name } = user;
+      const { name, fingerprint_id } = user;
+
+      const timeElapsed = Date.now();
+      let currentDatetime = new Date(timeElapsed);
+      currentDatetime = currentDatetime.toLocaleString('pt-BR');
+
+      const access = await _Access2.default.create({
+        fingerprint_name: name,
+        access_id: fingerprint_id,
+        read_at: currentDatetime,
+      });
+
+      if (!access) return res.status(400).json({ data: { error: 'Fail to register access.' } });
 
       return res.json({
         data: {

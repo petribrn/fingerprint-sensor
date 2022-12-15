@@ -80,15 +80,15 @@ class HttpClientAdapter implements HttpClient {
       return null;
       // Errors
     } else if (response.statusCode == 400) {
-      throw BadRequestException(responseBodyDecoded['error'] ?? '');
+      throw BadRequestException(responseBodyDecoded ?? '');
     } else if (response.statusCode == 401) {
-      throw UnAuthorizedException(responseBodyDecoded['error'] ?? '');
+      throw UnAuthorizedException(responseBodyDecoded ?? '');
     } else if (response.statusCode == 403) {
-      throw ForbiddenException(responseBodyDecoded['error'] ?? '');
+      throw ForbiddenException(responseBodyDecoded ?? '');
     } else if (response.statusCode == 404) {
-      throw NotFoundException(responseBodyDecoded['error'] ?? '');
+      throw NotFoundException(responseBodyDecoded ?? '');
     } else {
-      throw InternalServerException(responseBodyDecoded['error'] ?? '');
+      throw InternalServerException(responseBodyDecoded ?? '');
     }
   }
 
@@ -104,15 +104,15 @@ class HttpClientAdapter implements HttpClient {
       return null;
       // Errors
     } else if (response.statusCode == 400) {
-      throw BadRequestException(responseBodyDecoded['error'] ?? '');
+      throw BadRequestException(responseBodyDecoded ?? '');
     } else if (response.statusCode == 401) {
-      throw UnAuthorizedException(responseBodyDecoded['error'] ?? '');
+      throw UnAuthorizedException(responseBodyDecoded ?? '');
     } else if (response.statusCode == 403) {
-      throw ForbiddenException(responseBodyDecoded['error'] ?? '');
+      throw ForbiddenException(responseBodyDecoded ?? '');
     } else if (response.statusCode == 404) {
-      throw NotFoundException(responseBodyDecoded['error'] ?? '');
+      throw NotFoundException(responseBodyDecoded ?? '');
     } else {
-      throw InternalServerException(responseBodyDecoded['error'] ?? '');
+      throw InternalServerException(responseBodyDecoded ?? '');
     }
   }
 }

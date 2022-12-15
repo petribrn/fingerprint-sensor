@@ -103,7 +103,7 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
 
     if (fingerprintEdited != null) {
       if (fingerprint.name != fingerprintEdited.name) {
-        await fingerprintRepository.updateFingerprint(fingerprint);
+        await fingerprintRepository.updateFingerprint(fingerprintEdited);
         await reloadData();
 
         showSnackbar(text: 'Digital editada com sucesso');

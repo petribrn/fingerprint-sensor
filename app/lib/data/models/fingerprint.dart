@@ -28,7 +28,6 @@ class Fingerprint extends Equatable {
     return {
       'id': fingerprintId,
       'name': name,
-      // 'created_at': creationDate.formattedDate,
     };
   }
 

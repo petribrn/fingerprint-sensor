@@ -1,4 +1,5 @@
 import User from '../models/User';
+import Access from '../models/Access';
 import arduinoAxios from '../services/arduinoAxios';
 
 class UserController {
@@ -21,7 +22,7 @@ class UserController {
 
   async index(req, res) {
     try {
-      const users = await User.findAll({ attributes: ['name', 'fingerprint_id'] });
+      const users = await User.findAll({ attributes: ['name', 'fingerprint_id', 'created_at'] });
       return res.json(users);
     } catch (error) {
       return res.json(null);
@@ -96,6 +97,15 @@ class UserController {
     }
   }
 
+  async accessHistory(req, res) {
+    try {
+      const history = await Access.findAll({ attributes: ['access_id', 'fingerprint_name', 'read_at'] });
+      return res.json(history);
+    } catch (error) {
+      return res.json(null);
+    }
+  }
+
   async initSignUpMode(req, res) {
     try {
       if (!req.params.id) return false;
@@ -166,7 +176,19 @@ class UserController {
 
       if (!user) return res.json({ data: { error: 'User not found in cloud db.' } });
 
-      const { name } = user;
+      const { name, fingerprint_id } = user;
+
+      const timeElapsed = Date.now();
+      let currentDatetime = new Date(timeElapsed);
+      currentDatetime = currentDatetime.toLocaleString('pt-BR');
+
+      const access = await Access.create({
+        fingerprint_name: name,
+        access_id: fingerprint_id,
+        read_at: currentDatetime,
+      });
+
+      if (!access) return res.status(400).json({ data: { error: 'Fail to register access.' } });
 
       return res.json({
         data: {

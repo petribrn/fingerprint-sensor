@@ -10,20 +10,32 @@ extension StringExtension on String {
   }
 
   DateTime get toDateTime {
-    final day = int.parse('${[0]}${[1]}');
-    final month = int.parse('${[3]}${[4]}');
-    final year = int.parse('${[6]}${[7]}${[8]}${[9]}');
+    final day = int.parse('${this[0]}${this[1]}');
+    final month = int.parse('${this[3]}${this[4]}');
+    final year = int.parse('${this[6]}${this[7]}${this[8]}${this[9]}');
 
     int? hour;
     int? minute;
     int? second;
 
     if (length > 10) {
-      hour = int.parse('${[11]}${[12]}');
-      minute = int.parse('${[14]}${[15]}');
-      second = int.parse('${[17]}${[18]}');
+      hour = int.parse('${this[11]}${this[12]}');
+      minute = int.parse('${this[14]}${this[15]}');
+      second = int.parse('${this[17]}${this[18]}');
     }
 
     return DateTime(year, month, day, hour ?? 0, minute ?? 0, second ?? 0);
+  }
+
+  DateTime get utcToDateTime {
+    final year = int.parse('${this[0]}${this[1]}${this[2]}${this[3]}');
+    final month = int.parse('${this[5]}${this[6]}');
+    final day = int.parse('${this[8]}${this[9]}');
+
+    final second = int.parse('${this[11]}${this[12]}');
+    final minute = int.parse('${this[14]}${this[15]}');
+    final hour = int.parse('${this[17]}${this[18]}');
+
+    return DateTime(year, month, day, hour, minute, second);
   }
 }

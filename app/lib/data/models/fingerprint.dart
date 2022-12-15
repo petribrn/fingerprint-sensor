@@ -20,15 +20,14 @@ class Fingerprint extends Equatable {
     return Fingerprint(
       fingerprintId: json['fingerprint_id'] as int,
       name: json['name'] as String,
-      creationDate: (json['created_at'] as String).toDateTime,
+      creationDate: (json['created_at'] as String).utcToDateTime,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'fingerprint_id': fingerprintId,
+      'id': fingerprintId,
       'name': name,
-      'created_at': creationDate.formattedDate,
     };
   }
 

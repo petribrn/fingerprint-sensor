@@ -92,26 +92,27 @@ class HttpFingerprintRepository implements FingerprintRepository {
   @override
   Future<List<Fingerprint>?> fetchAllFingerprints() async {
     final url = makeApiUrl(path: 'users');
+    List? fingerprintsResponse;
 
     try {
-      final fingerprintsResponse = await httpClientAdapter.requestAll(url: url);
-
-      if (fingerprintsResponse == null) return null;
-
-      final fingerprintsRaw = fingerprintsResponse.map((fingerprintMap) {
-        try {
-          return Fingerprint.fromMap(fingerprintMap);
-        } on AppException {
-          return Fingerprint(fingerprintId: -1);
-        }
-      });
-
-      final fingerprints = fingerprintsRaw.where((fingerprint) => fingerprint.fingerprintId != -1).toList();
-
-      return fingerprints;
+      fingerprintsResponse = await httpClientAdapter.requestAll(url: url);
     } on Exception catch (_) {
       return null;
     }
+
+    if (fingerprintsResponse == null) return null;
+
+    final fingerprintsRaw = fingerprintsResponse.map((fingerprintMap) {
+      try {
+        return Fingerprint.fromMap(fingerprintMap);
+      } on AppException {
+        return Fingerprint(fingerprintId: -1);
+      }
+    });
+
+    final fingerprints = fingerprintsRaw.where((fingerprint) => fingerprint.fingerprintId != -1).toList();
+
+    return fingerprints;
   }
 
   @override

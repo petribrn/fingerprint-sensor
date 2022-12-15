@@ -70,7 +70,7 @@ class UserController {
           errors: ['User not found.'],
         });
       }
-      await arduinoAxios.post('/delete-fingerprint', { id: req.params.id }); // CHECK IF IS POSSIBLE TO USE DELETE METHOD IN ARDUINO
+      // await arduinoAxios.post('/delete-fingerprint', { id: req.params.id }); // CHECK IF IS POSSIBLE TO USE DELETE METHOD IN ARDUINO
       await user.destroy();
 
       return res.json(null);

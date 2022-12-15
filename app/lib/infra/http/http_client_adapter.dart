@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 import '../../contracts/contracts.dart';
@@ -18,7 +18,7 @@ class HttpClientAdapter implements HttpClient {
         };
 
   @override
-  Future<Map<String, dynamic>?> request({
+  Future request({
     required String url,
     required String method,
     Map<String, dynamic>? body,
@@ -29,16 +29,16 @@ class HttpClientAdapter implements HttpClient {
     try {
       switch (method) {
         case 'get':
-          response = await client.get(Uri.parse(url), headers: _headers).timeout(const Duration(seconds: 10));
+          response = await client.get(Uri.parse(url), headers: _headers).timeout(const Duration(seconds: 30));
           break;
         case 'post':
-          response = await client.post(Uri.parse(url), headers: _headers, body: bodyJson).timeout(const Duration(seconds: 10));
+          response = await client.post(Uri.parse(url), headers: _headers, body: bodyJson).timeout(const Duration(seconds: 30));
           break;
         case 'put':
-          response = await client.put(Uri.parse(url), headers: _headers, body: bodyJson).timeout(const Duration(seconds: 10));
+          response = await client.put(Uri.parse(url), headers: _headers, body: bodyJson).timeout(const Duration(seconds: 30));
           break;
         case 'delete':
-          response = await client.delete(Uri.parse(url), headers: _headers).timeout(const Duration(seconds: 10));
+          response = await client.delete(Uri.parse(url), headers: _headers).timeout(const Duration(seconds: 30));
           break;
       }
     } on Exception catch (error) {
@@ -47,28 +47,28 @@ class HttpClientAdapter implements HttpClient {
       throw const InternalServerException('Conexão com o servidor perdida');
     }
 
-    return _checkResponseAndReturn(response) as Map<String, dynamic>?;
+    return _checkResponseAndReturn(response);
   }
 
   @override
-  Future<List<Map<String, dynamic>>?> requestAll({
+  Future<List?> requestAll({
     required String url,
     Map<String, dynamic>? body,
   }) async {
     var response = Response('', 500);
 
     try {
-      response = await client.get(Uri.parse(url), headers: _headers).timeout(const Duration(seconds: 10));
+      response = await client.get(Uri.parse(url), headers: _headers).timeout(const Duration(seconds: 30));
     } on Exception catch (error) {
       debugPrint('$error');
 
       throw const InternalServerException('Conexão com o servidor perdida');
     }
 
-    return _checkResponseAndReturn(response) as List<Map<String, dynamic>>?;
+    return _checkResponseAndReturnAll(response);
   }
 
-  Future<dynamic> _checkResponseAndReturn(Response response) async {
+  dynamic _checkResponseAndReturn(Response response) {
     final responseBodyDecoded = jsonDecode(response.body);
 
     // Success
@@ -80,15 +80,39 @@ class HttpClientAdapter implements HttpClient {
       return null;
       // Errors
     } else if (response.statusCode == 400) {
-      throw BadRequestException(responseBodyDecoded['error'] ?? '');
+      throw BadRequestException(responseBodyDecoded ?? '');
     } else if (response.statusCode == 401) {
-      throw UnAuthorizedException(responseBodyDecoded['error'] ?? '');
+      throw UnAuthorizedException(responseBodyDecoded ?? '');
     } else if (response.statusCode == 403) {
-      throw ForbiddenException(responseBodyDecoded['error'] ?? '');
+      throw ForbiddenException(responseBodyDecoded ?? '');
     } else if (response.statusCode == 404) {
-      throw NotFoundException(responseBodyDecoded['error'] ?? '');
+      throw NotFoundException(responseBodyDecoded ?? '');
     } else {
-      throw InternalServerException(responseBodyDecoded['error'] ?? '');
+      throw InternalServerException(responseBodyDecoded ?? '');
+    }
+  }
+
+  List? _checkResponseAndReturnAll(Response response) {
+    final responseBodyDecoded = jsonDecode(response.body);
+
+    // Success
+    if (response.statusCode == 200) {
+      return response.body.isEmpty ? null : responseBodyDecoded;
+    }
+    // No Content
+    if (response.statusCode == 204) {
+      return null;
+      // Errors
+    } else if (response.statusCode == 400) {
+      throw BadRequestException(responseBodyDecoded ?? '');
+    } else if (response.statusCode == 401) {
+      throw UnAuthorizedException(responseBodyDecoded ?? '');
+    } else if (response.statusCode == 403) {
+      throw ForbiddenException(responseBodyDecoded ?? '');
+    } else if (response.statusCode == 404) {
+      throw NotFoundException(responseBodyDecoded ?? '');
+    } else {
+      throw InternalServerException(responseBodyDecoded ?? '');
     }
   }
 }

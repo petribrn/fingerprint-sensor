@@ -4,6 +4,7 @@ analyzer:
   errors:
     todo: ignore
     constant_identifier_names: ignore
+    overridden_fields: false
 
 linter:
   rules:

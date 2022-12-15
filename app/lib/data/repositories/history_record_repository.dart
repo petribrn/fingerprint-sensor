@@ -1,6 +1,6 @@
 import '../../contracts/contracts.dart';
 import '../../factories/factories.dart';
-import '../models/models.dart';
+import '../data.dart';
 
 class HttpHistoryRecordRepository implements HistoryRecordRepository {
   HttpClient httpClientAdapter;
@@ -11,7 +11,6 @@ class HttpHistoryRecordRepository implements HistoryRecordRepository {
 
   @override
   Future<List<HistoryRecord>?> fetchAllHistoryRecords() async {
-    // Include a new route in API later
     final url = makeApiUrl(path: 'history_records');
 
     try {
@@ -21,9 +20,15 @@ class HttpHistoryRecordRepository implements HistoryRecordRepository {
 
       if (historyRecordsResponse == null) return null;
 
-      final historyRecords = historyRecordsResponse.map((historyRecordMap) {
-        return HistoryRecord.fromMap(historyRecordMap);
+      final historyRecordsRaw = historyRecordsResponse.map((historyRecordMap) {
+        try {
+          return HistoryRecord.fromMap(historyRecordMap);
+        } on AppException {
+          return HistoryRecord(fingerprint: Fingerprint(fingerprintId: -1));
+        }
       }).toList();
+
+      final historyRecords = historyRecordsRaw.where((historyRecord) => historyRecord.fingerprint.fingerprintId != -1).toList();
 
       return historyRecords;
     } on Exception catch (_) {

@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 import '../../contracts/contracts.dart';
+import '../../data/data.dart';
 
 class HttpClientAdapter implements HttpClient {
   Client client;
@@ -41,8 +41,10 @@ class HttpClientAdapter implements HttpClient {
           response = await client.delete(Uri.parse(url), headers: _headers).timeout(const Duration(seconds: 30));
           break;
       }
-    } on Exception catch (_) {
-      rethrow;
+    } on Exception catch (error) {
+      debugPrint('$error');
+
+      throw const InternalServerException('Conexão com o servidor perdida');
     }
 
     return _checkResponseAndReturn(response);
@@ -95,22 +97,22 @@ class HttpClientAdapter implements HttpClient {
 
     // Success
     if (response.statusCode == 200) {
-      return response.body.isEmpty ? null : jsonDecode(response.body);
+      return response.body.isEmpty ? null : responseBodyDecoded;
     }
     // No Content
     if (response.statusCode == 204) {
       return null;
-    // Errors
+      // Errors
     } else if (response.statusCode == 400) {
-      throw const HttpException('400 - Bad Request');
+      throw BadRequestException(responseBodyDecoded['error'] ?? '');
     } else if (response.statusCode == 401) {
-      throw const HttpException('401 - Unauthorized');
+      throw UnAuthorizedException(responseBodyDecoded['error'] ?? '');
     } else if (response.statusCode == 403) {
-      throw const HttpException('403 - Forbidden');
+      throw ForbiddenException(responseBodyDecoded['error'] ?? '');
     } else if (response.statusCode == 404) {
-      throw const HttpException('404 - Not Found');
+      throw NotFoundException(responseBodyDecoded['error'] ?? '');
     } else {
-      throw const HttpException('500 - Server Error');
+      throw InternalServerException(responseBodyDecoded['error'] ?? '');
     }
   }
 }

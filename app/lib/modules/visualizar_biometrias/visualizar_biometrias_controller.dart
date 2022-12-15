@@ -63,20 +63,6 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
 
     // Sorting by latest creation date
     _fingerprints.value = fingerprintsFetched..sort((f1, f2) => f2.creationDate.compareTo(f1.creationDate));
-
-    // Remove this mocks when API is fully integrated
-    _fingerprints.value = [
-      Fingerprint(fingerprintId: 1, creationDate: DateTime(2017, 9, 7)),
-      Fingerprint(fingerprintId: 8, creationDate: DateTime(2021, 9, 7)),
-      Fingerprint(fingerprintId: 2, creationDate: DateTime(2018, 9, 7)),
-      Fingerprint(fingerprintId: 9, creationDate: DateTime(2021, 9, 7)),
-      Fingerprint(fingerprintId: 3, name: 'André de Souza', creationDate: DateTime(2019, 9, 7)),
-      Fingerprint(fingerprintId: 4, creationDate: DateTime(2020, 9, 7)),
-      Fingerprint(fingerprintId: 5, creationDate: DateTime(2021, 9, 7)),
-      Fingerprint(fingerprintId: 6, name: 'Franco Tavares', creationDate: DateTime(2021, 9, 7)),
-      Fingerprint(fingerprintId: 7, creationDate: DateTime(2021, 9, 7)),
-    ]..sort((f1, f2) => f2.creationDate.compareTo(f1.creationDate));
-
     _fingerprintsToShow.value = _fingerprints;
 
     await Future.delayed(const Duration(milliseconds: 800));

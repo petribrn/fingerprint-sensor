@@ -10,35 +10,107 @@ class HttpFingerprintRepository implements FingerprintRepository {
   });
 
   @override
-  Future<Fingerprint?> fetchFingerprint(int fingerprintId) async {
-    final url = makeApiUrl(path: 'users/$fingerprintId');
-
-    try {
-      final httpResponse = await httpClientAdapter.request(
-        url: url,
-        method: 'get',
-      );
-
-      return httpResponse == null ? null : Fingerprint.fromMap(httpResponse);
-    } on Exception catch (_) {
-      return null;
-    }
-  }
-
-  @override
-  Future<Result> sendFingerprint(Fingerprint fingerprint) async {
-    final url = makeApiUrl(path: 'users');
+  Future<Result> sendFingerprintId(int fingerprintId) async {
+    final url = makeApiUrl(path: 'users/init-sign-up/$fingerprintId');
 
     try {
       final fingerprintResponse = await httpClientAdapter.request(
         url: url,
-        method: 'post',
-        body: fingerprint.toMap(),
+        method: 'get',
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (e) {
-      return Result.error('$e');
+    } on Exception catch (error) {
+      if (error is AppException) {
+        return Result.error(error.message);
+      }
+
+      return Result.error('$error');
+    }
+  }
+
+  @override
+  Future<Result> executeFirstRead() async {
+    final url = makeApiUrl(path: 'users/first-read');
+
+    try {
+      final fingerprintResponse = await httpClientAdapter.request(
+        url: url,
+        method: 'get',
+      );
+
+      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
+    } on Exception catch (error) {
+      if (error is AppException) {
+        return Result.error(error.message);
+      }
+
+      return Result.error('$error');
+    }
+  }
+
+  @override
+  Future<Result> executeSecondRead() async {
+    final url = makeApiUrl(path: 'users/second-read');
+
+    try {
+      final fingerprintResponse = await httpClientAdapter.request(
+        url: url,
+        method: 'get',
+      );
+
+      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
+    } on Exception catch (error) {
+      if (error is AppException) {
+        return Result.error(error.message);
+      }
+
+      return Result.error('$error');
+    }
+  }
+
+  @override
+  Future<Result> verifyFingerprint() async {
+    final url = makeApiUrl(path: 'users/check-fingerprint');
+
+    try {
+      final fingerprintResponse = await httpClientAdapter.request(
+        url: url,
+        method: 'get',
+      );
+
+      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
+    } on Exception catch (error) {
+      if (error is AppException) {
+        return Result.error(error.message);
+      }
+
+      return Result.error('$error');
+    }
+  }
+
+  @override
+  Future<List<Fingerprint>?> fetchAllFingerprints() async {
+    final url = makeApiUrl(path: 'users');
+
+    try {
+      final fingerprintsResponse = await httpClientAdapter.requestAll(url: url);
+
+      if (fingerprintsResponse == null) return null;
+
+      final fingerprintsRaw = fingerprintsResponse.map((fingerprintMap) {
+        try {
+          return Fingerprint.fromMap(fingerprintMap);
+        } on AppException {
+          return Fingerprint(fingerprintId: -1);
+        }
+      });
+
+      final fingerprints = fingerprintsRaw.where((fingerprint) => fingerprint.fingerprintId != -1).toList();
+
+      return fingerprints;
+    } on Exception catch (_) {
+      return null;
     }
   }
 
@@ -54,8 +126,12 @@ class HttpFingerprintRepository implements FingerprintRepository {
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (e) {
-      return Result.error('$e');
+    } on Exception catch (error) {
+      if (error is AppException) {
+        return Result.error(error.message);
+      }
+
+      return Result.error('$error');
     }
   }
 
@@ -70,27 +146,12 @@ class HttpFingerprintRepository implements FingerprintRepository {
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (e) {
-      return Result.error('$e');
-    }
-  }
+    } on Exception catch (error) {
+      if (error is AppException) {
+        return Result.error(error.message);
+      }
 
-  @override
-  Future<List<Fingerprint>?> fetchAllFingerprints() async {
-    final url = makeApiUrl(path: 'users');
-
-    try {
-      final fingerprintsResponse = await httpClientAdapter.requestAll(
-        url: url.toString(),
-      );
-
-      if (fingerprintsResponse == null) return null;
-
-      final fingerprints = fingerprintsResponse.map((fingerprintMap) => Fingerprint.fromMap(fingerprintMap)).toList();
-
-      return fingerprints;
-    } on Exception catch (_) {
-      return null;
+      return Result.error('$error');
     }
   }
 }

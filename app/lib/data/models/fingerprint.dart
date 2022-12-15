@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../core/core.dart';
+import '../data.dart';
 
 class Fingerprint extends Equatable {
   final int fingerprintId;
@@ -14,12 +15,12 @@ class Fingerprint extends Equatable {
   }) : creationDate = creationDate ?? DateTime.now();
 
   factory Fingerprint.fromMap(Map<String, dynamic> json) {
-    if (!json.containsKey('fingerprint_id')) throw Exception();
+    if (!json.containsKey('fingerprint_id')) throw const AppException('Fingerprint id not found');
 
     return Fingerprint(
       fingerprintId: json['fingerprint_id'] as int,
       name: json['name'] as String,
-      creationDate: (json['creation_date'] as String).toDateTime,
+      creationDate: (json['created_at'] as String).toDateTime,
     );
   }
 
@@ -27,7 +28,7 @@ class Fingerprint extends Equatable {
     return {
       'fingerprint_id': fingerprintId,
       'name': name,
-      'creation_date': creationDate.formattedDate,
+      'created_at': creationDate.formattedDate,
     };
   }
 

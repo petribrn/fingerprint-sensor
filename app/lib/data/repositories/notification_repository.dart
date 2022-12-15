@@ -1,6 +1,7 @@
+import 'package:fingerprint_sensor/data/data.dart';
+
 import '../../contracts/contracts.dart';
 import '../../factories/factories.dart';
-import '../models/models.dart';
 
 class HttpNotificationRepository implements NotificationRepository {
   HttpClient httpClientAdapter;
@@ -10,20 +11,22 @@ class HttpNotificationRepository implements NotificationRepository {
   });
 
   @override
-  Future<Result> sendNotification(Map<String, dynamic> message) async {
-    // Include a new route in API later
-    final url = makeApiUrl(path: 'notifications');
+  Future<Result> fetchSensorState() async {
+    final url = makeApiUrl(path: 'users/status');
 
     try {
       final resultNotification = await httpClientAdapter.request(
         url: url,
-        method: 'post',
-        body: message,
+        method: 'get',
       );
 
       return resultNotification == null ? Result.empty() : Result.data(resultNotification);
-    } on Exception catch (e) {
-      return Result.error('$e');
+    } on Exception catch (error) {
+      if (error is AppException) {
+        return Result.error(error.message);
+      }
+
+      return Result.error('$error');
     }
   }
 }

@@ -66,28 +66,12 @@ class GetxVisualizarHistoricoController extends GetxController implements Visual
 
     _isLoading.value = true;
 
-    // final historyRecordsFetched = await historyRecordRepository.fetchAllHistoryRecords() ?? [];
+    final historyRecordsFetched = await historyRecordRepository.fetchAllHistoryRecords() ?? [];
 
-    // Sorting by latest creation date
-    // final historyRecordsRaw = historyRecordsFetched..sort((f1, f2) => f2.readDate.compareTo(f1.readDate));
+    // Sorting by latest read date
+    final historyRecordsRaw = historyRecordsFetched..sort((f1, f2) => f2.readDate.compareTo(f1.readDate));
 
-    // Remove this mocks when API is fully integrated
-    final historyRecordsRaw = <HistoryRecord>[
-      HistoryRecord(fingerprint: Fingerprint(fingerprintId: 1, creationDate: DateTime(2017, 9, 7)), readDate: DateTime(2021, 9, 7, 14, 55)),
-      HistoryRecord(fingerprint: Fingerprint(fingerprintId: 8, creationDate: DateTime(2021, 9, 7)), readDate: DateTime(2022, 9, 7, 19, 7)),
-      HistoryRecord(fingerprint: Fingerprint(fingerprintId: 2, creationDate: DateTime(2018, 9, 7)), readDate: DateTime(2022, 10, 21, 8, 3)),
-      HistoryRecord(fingerprint: Fingerprint(fingerprintId: 9, creationDate: DateTime(2021, 9, 7)), readDate: DateTime(2022, 3, 4, 7, 23)),
-      HistoryRecord(
-          fingerprint: Fingerprint(fingerprintId: 3, name: 'André de Souza', creationDate: DateTime(2019, 9, 7)),
-          readDate: DateTime(2020, 5, 5, 17, 35)),
-      HistoryRecord(fingerprint: Fingerprint(fingerprintId: 4, creationDate: DateTime(2020, 9, 7)), readDate: DateTime(2022, 8, 29, 23, 40)),
-      HistoryRecord(fingerprint: Fingerprint(fingerprintId: 5, creationDate: DateTime(2021, 9, 7)), readDate: DateTime(2022, 11, 4, 2, 56)),
-      HistoryRecord(
-          fingerprint: Fingerprint(fingerprintId: 6, name: 'Franco Tavares', creationDate: DateTime(2021, 9, 7)),
-          readDate: DateTime(2022, 11, 20, 11, 33)),
-      HistoryRecord(fingerprint: Fingerprint(fingerprintId: 7, creationDate: DateTime(2021, 9, 7)), readDate: DateTime(2022, 11, 20, 15, 15)),
-    ]..sort((f1, f2) => f2.readDate.compareTo(f1.readDate));
-
+    // Grouping by read date
     _historyRecords.value = groupBy<HistoryRecord, String>(historyRecordsRaw, (record) => record.readDate.formattedDate);
 
     await Future.delayed(const Duration(milliseconds: 800));

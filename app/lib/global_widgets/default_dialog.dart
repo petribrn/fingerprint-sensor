@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../core/core.dart';
 
 class DefaultDialog extends StatelessWidget {
+  final IconData? icon;
   final String title;
   final Widget content;
 
@@ -15,6 +16,7 @@ class DefaultDialog extends StatelessWidget {
 
   const DefaultDialog({
     super.key,
+    this.icon,
     required this.title,
     required this.content,
     required this.mainButtonText,
@@ -26,7 +28,25 @@ class DefaultDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title, style: Get.textTheme.headline5),
+      title: Column(
+        children: [
+          if (icon != null) ...[
+            Icon(
+              icon,
+              color: AppColors.greySmoke,
+              size: 28,
+            ),
+            const SizedBox(height: 20),
+          ],
+          Align(
+            alignment: icon != null ? Alignment.center : Alignment.centerLeft,
+            child: Text(
+              title,
+              style: Get.textTheme.headline5,
+            ),
+          ),
+        ],
+      ),
       content: content,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
       actions: [

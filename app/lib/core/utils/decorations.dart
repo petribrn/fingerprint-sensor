@@ -33,5 +33,6 @@ InputDecoration getTextFormFieldDecoration({
     hintText: hintText,
     hintStyle: Get.textTheme.bodyText1?.copyWith(color: AppColors.greySmoke.withOpacity(0.6)),
     helperText: '',
+    errorMaxLines: 2,
   );
 }

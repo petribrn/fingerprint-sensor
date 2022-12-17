@@ -23,10 +23,10 @@ class HttpNotificationRepository implements NotificationRepository {
       return resultNotification == null ? Result.empty() : Result.data(resultNotification);
     } on Exception catch (error) {
       if (error is AppException) {
-        return Result.error(error.message);
+        throw Result.error(error.message);
       }
 
-      return Result.error('$error');
+      throw Result.error('$error');
     }
   }
 }

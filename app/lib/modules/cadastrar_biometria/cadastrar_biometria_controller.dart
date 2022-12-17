@@ -41,7 +41,12 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
     }
 
     // 2: Check sensor connection state
-    final resultSensor = await notificationRepository.fetchSensorState();
+    Result resultSensor = Result();
+    try {
+      resultSensor = await notificationRepository.fetchSensorState();
+    } on Result catch (error) {
+      showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
+    }
 
     if (resultSensor.hasError) {
       return showSnackbar(text: 'Falha na conexão com o servidor. Tente novamente.');

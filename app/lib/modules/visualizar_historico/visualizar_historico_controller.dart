@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../contracts/contracts.dart';
@@ -66,16 +67,20 @@ class GetxVisualizarHistoricoController extends GetxController implements Visual
 
     _isLoading.value = true;
 
-    final historyRecordsFetched = await historyRecordRepository.fetchAllHistoryRecords() ?? [];
+    try {
+      final historyRecordsFetched = await historyRecordRepository.fetchAllHistoryRecords() ?? [];
 
-    // Sorting by latest read date
-    final historyRecordsRaw = historyRecordsFetched..sort((f1, f2) => f2.readDate.compareTo(f1.readDate));
+      // Sorting by latest read date
+      final historyRecordsRaw = historyRecordsFetched..sort((f1, f2) => f2.readDate.compareTo(f1.readDate));
 
-    // Grouping by read date
-    _historyRecords.value = groupBy<HistoryRecord, String>(historyRecordsRaw, (record) => record.readDate.formattedDate);
+      // Grouping by read date
+      _historyRecords.value = groupBy<HistoryRecord, String>(historyRecordsRaw, (record) => record.readDate.formattedDate);
 
-    await Future.delayed(const Duration(milliseconds: 800));
-    _isLoading.value = false;
+      await Future.delayed(const Duration(milliseconds: 800));
+      _isLoading.value = false;
+    } on Result catch (error) {
+      showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
+    }
   }
 
   @override

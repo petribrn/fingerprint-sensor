@@ -42,6 +42,7 @@ class EditionDialog extends StatelessWidget {
                 focusNode: focusNode,
                 onFieldSubmitted: (_) => unfocusField(),
                 onChanged: (value) => nameValue = value,
+                validator: (value) => validateValue(value),
               );
             }),
           ],
@@ -67,6 +68,15 @@ class EditionDialog extends StatelessWidget {
     }
   }
 
+  String? validateValue(String? value) {
+    if (value == null || value.isEmpty) return 'Obrigatório';
+
+    if (value.length < 3) return 'Deve possuir no mínimo 3 caracteres';
+    if (value.length > 255) return 'Deve possuir no máximo 255 caracteres';
+
+    return null;
+  }
+
   Fingerprint? _onFinishEdition() {
     final fieldCurrentState = fieldKey.currentState;
 
@@ -77,7 +87,14 @@ class EditionDialog extends StatelessWidget {
 
     fieldCurrentState.save();
 
-    final fingerprintEdited = fingerprint.copyWith(name: nameValue);
-    return fingerprintEdited;
+    final isValid = fieldCurrentState.validate();
+    if (isValid) {
+      fieldCurrentState.save();
+
+      final fingerprintEdited = fingerprint.copyWith(name: nameValue);
+      return fingerprintEdited;
+    }
+
+    return null;
   }
 }

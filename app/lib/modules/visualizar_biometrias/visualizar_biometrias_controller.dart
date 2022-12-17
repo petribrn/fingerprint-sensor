@@ -59,14 +59,18 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
 
     _isLoading.value = true;
 
-    final fingerprintsFetched = await fingerprintRepository.fetchAllFingerprints() ?? [];
+    try {
+      final fingerprintsFetched = await fingerprintRepository.fetchAllFingerprints() ?? [];
 
-    // Sorting by latest creation date
-    _fingerprints.value = fingerprintsFetched..sort((f1, f2) => f2.creationDate.compareTo(f1.creationDate));
-    _fingerprintsToShow.value = _fingerprints;
+      // Sorting by latest creation date
+      _fingerprints.value = fingerprintsFetched..sort((f1, f2) => f2.creationDate.compareTo(f1.creationDate));
+      _fingerprintsToShow.value = _fingerprints;
 
-    await Future.delayed(const Duration(milliseconds: 800));
-    _isLoading.value = false;
+      await Future.delayed(const Duration(milliseconds: 800));
+      _isLoading.value = false;
+    } on Result catch (error) {
+      showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
+    }
   }
 
   @override
@@ -101,15 +105,19 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
           )),
     );
 
-    if (fingerprintEdited != null) {
-      if (fingerprint.name != fingerprintEdited.name) {
-        await fingerprintRepository.updateFingerprint(fingerprintEdited);
-        await reloadData();
+    try {
+      if (fingerprintEdited != null) {
+        if (fingerprint.name != fingerprintEdited.name) {
+          await fingerprintRepository.updateFingerprint(fingerprintEdited);
+          await reloadData();
 
-        showSnackbar(text: 'Digital editada com sucesso');
-      } else {
-        showSnackbar(text: 'A digital não teve alterações');
+          showSnackbar(text: 'Digital editada com sucesso');
+        } else {
+          showSnackbar(text: 'A digital não teve alterações');
+        }
       }
+    } on Result catch (error) {
+      showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
     }
   }
 
@@ -121,11 +129,15 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
         ) ??
         false;
 
-    if (hasConfirmedExclusion) {
-      await fingerprintRepository.deleteFingerprint(fingerprintId);
-      await reloadData();
+    try {
+      if (hasConfirmedExclusion) {
+        await fingerprintRepository.deleteFingerprint(fingerprintId);
+        await reloadData();
 
-      showSnackbar(text: 'Digital excluída com sucesso');
+        showSnackbar(text: 'Digital excluída com sucesso');
+      }
+    } on Result catch (error) {
+      showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
     }
   }
 

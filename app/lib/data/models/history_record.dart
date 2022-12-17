@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import '../../core/core.dart';
 import '../data.dart';
 
 class HistoryRecord extends Equatable {
@@ -19,9 +18,8 @@ class HistoryRecord extends Equatable {
       fingerprint: Fingerprint(
         fingerprintId: json['access_id'] as int,
         name: json['fingerprint_name'] as String,
-        creationDate: (json['created_at'] as String).toDateTime,
       ),
-      readDate: (json['read_at'] as String).toDateTime,
+      readDate: json['read_at'] as String,
     );
   }
 

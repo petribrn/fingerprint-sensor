@@ -32,7 +32,7 @@ class ArduinoController {
 
       const user = await User.findOne({ where: { fingerprint_id: req.params.id } });
 
-      if (user) return res.json(null);
+      if (user) return res.json({ data: { error: 'Id da digital já cadastrado' } });
 
       const arduinoResponse = await arduinoAxios.post('/newfingerprint', { id: req.params.id });
 

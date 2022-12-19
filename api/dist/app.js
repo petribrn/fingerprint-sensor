@@ -4,6 +4,7 @@ var _cors = require('cors'); var _cors2 = _interopRequireDefault(_cors);
 var _corsConfig = require('./config/corsConfig'); var _corsConfig2 = _interopRequireDefault(_corsConfig);
 var _homeRoutes = require('./routes/homeRoutes'); var _homeRoutes2 = _interopRequireDefault(_homeRoutes);
 var _userRoutes = require('./routes/userRoutes'); var _userRoutes2 = _interopRequireDefault(_userRoutes);
+var _arduinoRoutes = require('./routes/arduinoRoutes'); var _arduinoRoutes2 = _interopRequireDefault(_arduinoRoutes);
 require('./database');
 
 class App {
@@ -23,6 +24,7 @@ class App {
   routes() {
     this.app.use('/', _homeRoutes2.default);
     this.app.use('/users/', _userRoutes2.default);
+    this.app.use('/arduino/', _arduinoRoutes2.default);
   }
 }
 

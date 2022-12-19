@@ -58,7 +58,9 @@ class ArduinoController {
 
       if (!arduinoResponse) return res.json(null);
 
-      if (arduinoResponse.data.error) return res.json({ error: arduinoResponse.data.error });
+      if (arduinoResponse.data.error) {
+        return res.json({ data: { error: arduinoResponse.data.error } });
+      }
 
       const { removeFinger } = arduinoResponse.data;
 
@@ -79,7 +81,9 @@ class ArduinoController {
 
       if (!arduinoResponse) return res.json(null);
 
-      if (arduinoResponse.data.error) return res.json({ error: arduinoResponse.data.error });
+      if (arduinoResponse.data.error) {
+        return res.json({ data: { error: arduinoResponse.data.error } });
+      }
 
       const { fingerprintId, doneSecondRead } = arduinoResponse.data;
 
@@ -101,7 +105,9 @@ class ArduinoController {
 
       if (!arduinoResponse) return res.json(null);
 
-      if (arduinoResponse.data.error) return res.json({ error: arduinoResponse.data.error });
+      if (arduinoResponse.data.error) {
+        return res.json({ data: { error: arduinoResponse.data.error } });
+      }
 
       const { foundId, confidence } = arduinoResponse.data;
 

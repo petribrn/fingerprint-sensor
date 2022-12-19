@@ -32,7 +32,7 @@ class ArduinoController {
 
       const user = await _User2.default.findOne({ where: { fingerprint_id: req.params.id } });
 
-      if (user) return res.json(null);
+      if (user) return res.json({ data: { error: 'Id da digital já cadastrado' } });
 
       const arduinoResponse = await _arduinoAxios2.default.post('/newfingerprint', { id: req.params.id });
 
@@ -58,7 +58,9 @@ class ArduinoController {
 
       if (!arduinoResponse) return res.json(null);
 
-      if (arduinoResponse.data.error) return res.json({ error: arduinoResponse.data.error });
+      if (arduinoResponse.data.error) {
+        return res.json({ data: { error: arduinoResponse.data.error } });
+      }
 
       const { removeFinger } = arduinoResponse.data;
 
@@ -79,7 +81,9 @@ class ArduinoController {
 
       if (!arduinoResponse) return res.json(null);
 
-      if (arduinoResponse.data.error) return res.json({ error: arduinoResponse.data.error });
+      if (arduinoResponse.data.error) {
+        return res.json({ data: { error: arduinoResponse.data.error } });
+      }
 
       const { fingerprintId, doneSecondRead } = arduinoResponse.data;
 
@@ -101,7 +105,9 @@ class ArduinoController {
 
       if (!arduinoResponse) return res.json(null);
 
-      if (arduinoResponse.data.error) return res.json({ error: arduinoResponse.data.error });
+      if (arduinoResponse.data.error) {
+        return res.json({ data: { error: arduinoResponse.data.error } });
+      }
 
       const { foundId, confidence } = arduinoResponse.data;
 

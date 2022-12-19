@@ -7,15 +7,13 @@ class ArduinoController {
     try {
       const arduinoResponse = await arduinoAxios.get('/status');
 
-      if (!arduinoResponse.data) {
+      if (!arduinoResponse) {
         return null;
       }
 
-      const isUp = arduinoResponse.data.isUp === 'true'; // TODO: Arduino integration to get this exact return
-
-      return res.json({ data: { isUp } });
+      return res.json({ data: { isUp: arduinoResponse.data.isUp } });
     } catch (error) {
-      return res.status(400).json(error.toJSON());
+      return res.json(error);
     }
   }
 
@@ -139,7 +137,7 @@ class ArduinoController {
         },
       });
     } catch (error) {
-      return res.status(400).json(error.toJSON());
+      return res.status(400).json(error);
     }
   }
 
@@ -155,7 +153,7 @@ class ArduinoController {
         },
       });
     } catch (error) {
-      return res.status(400).json(error.toJSON());
+      return res.status(400).json(error);
     }
   }
 }

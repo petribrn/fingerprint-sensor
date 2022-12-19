@@ -112,7 +112,7 @@ class ArduinoController {
       const { foundId, confidence } = arduinoResponse.data;
 
       const user = await _User2.default.findOne({ where: { fingerprint_id: foundId } });
-
+      
       if (!user) return res.json(null);
 
       const { name, fingerprint_id } = user;

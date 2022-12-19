@@ -37,7 +37,10 @@ class GetxSelecionarAcessoController extends GetxController implements Seleciona
     }
 
     if (accessMode == _currentMode.value) {
-      return showSnackbar(text: 'Modo de acesso já selecionado');
+      return showSnackbar(
+        text: 'Modo de acesso já selecionado',
+        duration: const Duration(seconds: 2),
+      );
     }
 
     if (_isFirstAppUse.value) {

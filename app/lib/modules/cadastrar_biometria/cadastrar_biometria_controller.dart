@@ -31,7 +31,10 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
   @override
   Future<void> onAddFingerprintPressed() async {
     if (_isFabDisabled.value) {
-      return showSnackbar(text: 'Aguarde o cadastro ser finalizado.');
+      return showSnackbar(
+        text: 'Aguarde o cadastro da digital ser finalizado',
+        duration: const Duration(seconds: 2),
+      );
     }
 
     // 1: Check device connectivity state
@@ -44,20 +47,20 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
     Result resultSensor = Result();
     try {
       resultSensor = await notificationRepository.fetchSensorState();
-    } on Result catch (error) {
-      return showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
-    }
 
-    if (resultSensor.hasError) {
-      return showSnackbar(text: 'Falha na conexão com o servidor. Tente novamente.');
-    }
-
-    if (resultSensor.hasData) {
-      final dataTyped = resultSensor.data as Map<String, dynamic>;
-
-      if (dataTyped['isUp'] != true) {
-        return await Get.dialog(const SensorConnectionDialog());
+      if (resultSensor.hasError || resultSensor.isEmpty) {
+        throw Result.empty();
       }
+
+      if (resultSensor.hasData) {
+        final dataTyped = resultSensor.data as Map<String, dynamic>;
+
+        if (dataTyped['data']['isUp'] != true) {
+          return await Get.dialog(const SensorConnectionDialog());
+        }
+      }
+    } on Result catch (result) {
+      return showSnackbar(text: result.error ?? 'Erro na conexão com o servidor. Tente novamente');
     }
 
     final id = await showDialog<int?>(
@@ -82,41 +85,39 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
       final resultId = await fingerprintRepository.initSignUp(_currentId!);
 
       if (resultId.hasError || resultId.isEmpty) {
-        showSnackbar(
-          text: 'Falha na conexão com o servidor. Tente novamente.',
-        );
-
-        throw Result.error('Erro durante o cadastro da digital');
+        throw Result.empty();
       } else if (resultId.hasData) {
-        final dataTyped = resultId.data as Map<String, dynamic>;
+        final dataIdTyped = resultId.data as Map<String, dynamic>;
 
-        if (resultId.error == 'Id da digital já cadastrado') {
-          showSnackbar(
-            text: 'O código informado já pertence a uma digital cadastrada. ${resultId.error}',
-            duration: const Duration(seconds: 3),
-          );
+        if (dataIdTyped['data']['error'] == 'Id da digital já cadastrado') {
+          throw Result.error('O código informado já pertence a uma digital cadastrada');
         }
 
-        if (dataTyped['message'] == 'Posicione o dedo no sensor') {
+        if (dataIdTyped['data']['signUpMode'] != true) {
+          // Erro na conexão do arduino ao enviar id da digital para iniciar cadastro
+          throw Result.empty();
+        }
+
+        if (dataIdTyped['data']['message'] == 'Posicione o dedo no sensor') {
           await Future.delayed(const Duration(seconds: 2));
-          yield Result.data(dataTyped['message']);
+          yield Result.data(dataIdTyped['message']);
         }
       }
 
       // 4: Start of first read
       final resultFirstRead = await fingerprintRepository.executeFirstRead();
       if (resultFirstRead.hasError || resultFirstRead.isEmpty) {
-        showSnackbar(
-          text: 'Falha na conexão com o servidor. Tente novamente.',
-        );
-
-        throw Result.error('Erro durante o cadastro da digital');
+        throw Result.empty();
       } else if (resultFirstRead.hasData) {
-        final dataTyped = resultFirstRead.data as Map<String, dynamic>;
+        final dataFirstReadTyped = resultFirstRead.data as Map<String, dynamic>;
 
-        if (dataTyped['message'] == 'Retire o dedo do sensor') {
+        if (dataFirstReadTyped['data']['error'] == 'Erro image2Tz 1') {
+          throw Result.error('Erro ao gravar imagem da primeira leitura da digital');
+        }
+
+        if (dataFirstReadTyped['data']['doneFirstRead'] == true && dataFirstReadTyped['data']['message'] == 'Retire o dedo do sensor') {
           await Future.delayed(const Duration(seconds: 2));
-          yield Result.data(dataTyped['message']);
+          yield Result.data(dataFirstReadTyped['message']);
         }
       }
 
@@ -129,15 +130,23 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
       final resultSecondRead = await fingerprintRepository.executeSecondRead();
 
       if (resultSecondRead.hasError || resultSecondRead.isEmpty) {
-        showSnackbar(
-          text: 'Falha na conexão com o servidor. Tente novamente.',
-        );
-
-        throw Result.error('Erro durante o cadastro da digital');
+        throw Result.empty();
       } else if (resultSecondRead.hasData) {
-        final dataTyped = resultSecondRead.data as Map<String, dynamic>;
+        final dataSecondReadTyped = resultSecondRead.data as Map<String, dynamic>;
 
-        if (dataTyped['message'] == 'Digital cadastrada com sucesso') {
+        if (dataSecondReadTyped['data']['error'] == 'Erro image2Tz 2') {
+          throw Result.error('Erro ao gravar imagem da segunda leitura da digital');
+        }
+
+        if (dataSecondReadTyped['data']['error'] == 'Erro createModel') {
+          throw Result.error('Erro criar modelo da digital após as duas leituras serem bem sucedidas');
+        }
+
+        if (dataSecondReadTyped['data']['error'] == 'Erro storeModel') {
+          throw Result.error('Erro ao gravar digital no sensor após as duas leituras serem bem sucedidas');
+        }
+
+        if (dataSecondReadTyped['data']['doneSecondRead'] == true && dataSecondReadTyped['data']['message'] == 'Leitura concluída') {
           // 6: Store new fingeprint id in database
           final resultStore = await fingerprintRepository.sendFingerprint(
             Fingerprint(fingerprintId: _currentId!),
@@ -145,20 +154,13 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
 
           if (resultStore.hasError || resultStore.isEmpty) {
             if (resultStore.isEmpty) {
-              showSnackbar(
-                text: 'Falha na conexão com o servidor. Tente novamente.',
-              );
+              throw Result.empty();
             } else if (resultStore.hasError) {
-              showSnackbar(
-                text: 'Erro ao salvar digital no banco de dados. Tente novamente.',
-                duration: const Duration(seconds: 3),
-              );
+              throw Result.error('Erro ao salvar digital no banco de dados');
             }
-
-            throw Result.error('Erro durante o cadastro da digital');
-          } else {
+          } else if (resultStore.hasData) {
             await Future.delayed(const Duration(seconds: 2));
-            yield Result.data(dataTyped['message']);
+            yield Result.data('Digital cadastrada com sucesso');
 
             Get.dialog(
               FinishReadDialog(
@@ -172,8 +174,10 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
           }
         }
       }
-    } on Result catch (error) {
-      yield error;
+    } on Result catch (result) {
+      showSnackbar(text: result.error ?? 'Erro na conexão com o servidor. Tente novamente');
+
+      yield Result.error('Erro no cadastro da digital');
     }
   }
 

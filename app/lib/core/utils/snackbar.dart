@@ -7,7 +7,7 @@ void showSnackbar({
   required String text,
   String? buttonText,
   SnackPosition position = SnackPosition.BOTTOM,
-  Duration duration = const Duration(seconds: 2),
+  Duration duration = const Duration(seconds: 3),
 }) {
   if (Get.isSnackbarOpen) Get.closeCurrentSnackbar();
 

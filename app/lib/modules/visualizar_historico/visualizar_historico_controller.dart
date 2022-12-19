@@ -78,7 +78,7 @@ class GetxVisualizarHistoricoController extends GetxController implements Visual
       await Future.delayed(const Duration(milliseconds: 800));
       _isLoading.value = false;
     } on Result catch (error) {
-      showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
+      showSnackbar(text: error.error ?? 'Erro na conexão com o servidor. Tente novamente.');
     }
   }
 

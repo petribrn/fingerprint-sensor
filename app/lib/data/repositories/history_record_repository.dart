@@ -16,8 +16,8 @@ class HttpHistoryRecordRepository implements HistoryRecordRepository {
 
     try {
       historyRecordsResponse = await httpClientAdapter.requestAll(url: url);
-    } on Exception catch (error) {
-      throw Result.error('$error');
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
 
     if (historyRecordsResponse == null) return null;

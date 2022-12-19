@@ -69,7 +69,7 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
       await Future.delayed(const Duration(milliseconds: 800));
       _isLoading.value = false;
     } on Result catch (error) {
-      showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
+      showSnackbar(text: error.error ?? 'Erro na conexão com o servidor. Tente novamente.');
     }
   }
 
@@ -111,13 +111,19 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
           await fingerprintRepository.updateFingerprint(fingerprintEdited);
           await reloadData();
 
-          showSnackbar(text: 'Digital editada com sucesso');
+          showSnackbar(
+            text: 'Digital editada com sucesso',
+            duration: const Duration(seconds: 2),
+          );
         } else {
-          showSnackbar(text: 'A digital não teve alterações');
+          showSnackbar(
+            text: 'A digital não teve alterações',
+            duration: const Duration(seconds: 2),
+          );
         }
       }
     } on Result catch (error) {
-      showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
+      showSnackbar(text: error.error ?? 'Erro na conexão com o servidor. Tente novamente.');
     }
   }
 
@@ -134,10 +140,13 @@ class GetxVisualizarBiometriasController extends GetxController implements Visua
         await fingerprintRepository.deleteFingerprint(fingerprintId);
         await reloadData();
 
-        showSnackbar(text: 'Digital excluída com sucesso');
+        showSnackbar(
+          text: 'Digital excluída com sucesso',
+          duration: const Duration(seconds: 2),
+        );
       }
     } on Result catch (error) {
-      showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
+      showSnackbar(text: error.error ?? 'Erro na conexão com o servidor. Tente novamente.');
     }
   }
 

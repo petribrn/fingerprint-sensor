@@ -27,7 +27,10 @@ class GetxVerificarBiometriaController extends GetxController implements Verific
   @override
   Future<void> onVerifyButtonPressed() async {
     if (_isVerifyButtonDisabled.value) {
-      return showSnackbar(text: 'Aguarde a verificação ser finalizada.');
+      return showSnackbar(
+        text: 'Aguarde a verificação ser finalizada',
+        duration: const Duration(seconds: 2),
+      );
     }
 
     // 1: Check device connectivity state
@@ -40,20 +43,20 @@ class GetxVerificarBiometriaController extends GetxController implements Verific
     Result resultSensor = Result();
     try {
       resultSensor = await notificationRepository.fetchSensorState();
-    } on Result catch (error) {
-      return showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
-    }
 
-    if (resultSensor.hasError) {
-      return showSnackbar(text: 'Falha na conexão com o servidor. Tente novamente.');
-    }
-
-    if (resultSensor.hasData) {
-      final dataTyped = resultSensor.data as Map<String, dynamic>;
-
-      if (dataTyped['isUp'] != true) {
-        return await Get.dialog(const SensorConnectionDialog());
+      if (resultSensor.hasError || resultSensor.isEmpty) {
+        throw Result.empty();
       }
+
+      if (resultSensor.hasData) {
+        final dataTyped = resultSensor.data as Map<String, dynamic>;
+
+        if (dataTyped['data']['isUp'] != true) {
+          return await Get.dialog(const SensorConnectionDialog());
+        }
+      }
+    } on Result catch (result) {
+      return showSnackbar(text: result.error ?? 'Erro na conexão com o servidor. Tente novamente');
     }
 
     _willStartVerification.value = true;
@@ -70,55 +73,42 @@ class GetxVerificarBiometriaController extends GetxController implements Verific
       final resultVerify = await fingerprintRepository.verifyFingerprint();
 
       if (resultVerify.hasError || resultVerify.isEmpty) {
-        showSnackbar(
-          text: 'Falha na conexão com o servidor. Tente novamente.',
-        );
-
-        throw Result.error('Erro na verificação da digital');
+        throw Result.empty();
       } else if (resultVerify.hasData) {
         final dataTyped = resultVerify.data as Map<String, dynamic>;
 
-        if (dataTyped['error'] != null) {
+        if (dataTyped['data']['error'] != null) {
           final error = dataTyped['error'];
 
           if (error == 'Fingerprint not found') {
-            showSnackbar(
-              text: 'Digital não foi encontrada no sensor',
-            );
-          } else if (error == 'User not found in cloud db.') {
-            showSnackbar(
-              text: 'Digital não foi encontrada no servidor',
-            );
-          } else if (error == 'Fail to register access.') {
-            showSnackbar(
-              text: 'Falha ao registrar histórico de verificação. Tente novamente.',
-              duration: const Duration(seconds: 3),
-            );
-          } else {
-            showSnackbar(
-              text: 'Falha na conexão com o servidor. Tente novamente.',
-            );
+            throw Result.error('Digital não foi encontrada no sensor');
           }
 
-          throw Result.error('Erro na verificação da digital');
+          if (error == 'Erro image2Tz') {
+            throw Result.error('Erro ao ler imagem da digital no sensor. Tente novamente');
+          }
+
+          throw Result.empty();
         } else {
           await Future.delayed(const Duration(seconds: 2));
-          yield Result.data('Digital encontrada');
+          yield Result.data('Digital encontrada com sucesso');
 
           Get.dialog(
             FinishReadDialog(
               dialogContent: FinishDialogContent(
-                id: dataTyped['foundId'],
-                name: dataTyped['name'],
+                id: dataTyped['data']['foundId'],
+                name: dataTyped['data']['name'],
                 date: DateTime.now(),
-                confidence: dataTyped['confidence'],
+                confidence: dataTyped['data']['confidence'],
               ),
             ),
           );
         }
       }
-    } on Result catch (error) {
-      yield error;
+    } on Result catch (result) {
+      showSnackbar(text: result.error ?? 'Erro na conexão com o servidor. Tente novamente');
+
+      yield Result.error('Erro na verificação da digital');
     }
   }
 

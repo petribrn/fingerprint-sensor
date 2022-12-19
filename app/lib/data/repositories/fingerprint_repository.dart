@@ -40,12 +40,8 @@ class HttpFingerprintRepository implements FingerprintRepository {
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (error) {
-      if (error is AppException) {
-        throw Result.error(error.message);
-      }
-
-      throw Result.error('$error');
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
   }
 
@@ -60,12 +56,8 @@ class HttpFingerprintRepository implements FingerprintRepository {
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (error) {
-      if (error is AppException) {
-        throw Result.error(error.message);
-      }
-
-      throw Result.error('$error');
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
   }
 
@@ -80,12 +72,8 @@ class HttpFingerprintRepository implements FingerprintRepository {
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (error) {
-      if (error is AppException) {
-        throw Result.error(error.message);
-      }
-
-      throw Result.error('$error');
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
   }
 
@@ -101,12 +89,8 @@ class HttpFingerprintRepository implements FingerprintRepository {
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (error) {
-      if (error is AppException) {
-        throw Result.error(error.message);
-      }
-
-      throw Result.error('$error');
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
   }
 
@@ -122,12 +106,8 @@ class HttpFingerprintRepository implements FingerprintRepository {
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (error) {
-      if (error is AppException) {
-        throw Result.error(error.message);
-      }
-
-      throw Result.error('$error');
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
   }
 
@@ -142,12 +122,8 @@ class HttpFingerprintRepository implements FingerprintRepository {
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (error) {
-      if (error is AppException) {
-        throw Result.error(error.message);
-      }
-
-      throw Result.error('$error');
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
   }
 
@@ -158,8 +134,8 @@ class HttpFingerprintRepository implements FingerprintRepository {
 
     try {
       fingerprintsResponse = await httpClientAdapter.requestAll(url: url);
-    } on Exception catch (error) {
-      throw Result.error('$error');
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
 
     if (fingerprintsResponse == null) return null;

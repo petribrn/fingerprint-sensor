@@ -49,7 +49,13 @@ class VerificarBiometriaPage extends GetView<VerificarBiometriaController> {
                                 stream: controller.verifyFingerprintInSensor(),
                                 builder: (_, snapshot) {
                                   if (!snapshot.hasData) {
-                                    return const Text(emptyTitle);
+                                    return Text(
+                                      emptyTitle,
+                                      style: Get.textTheme.subtitle1?.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.greySmoke,
+                                      ),
+                                    );
                                   }
 
                                   final result = snapshot.data as Result;

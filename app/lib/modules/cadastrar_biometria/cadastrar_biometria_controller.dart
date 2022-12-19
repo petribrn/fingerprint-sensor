@@ -45,7 +45,7 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
     try {
       resultSensor = await notificationRepository.fetchSensorState();
     } on Result catch (error) {
-      showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
+      return showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
     }
 
     if (resultSensor.hasError) {
@@ -55,7 +55,7 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
     if (resultSensor.hasData) {
       final dataTyped = resultSensor.data as Map<String, dynamic>;
 
-      if (dataTyped['data'] != true) {
+      if (dataTyped['isUp'] != true) {
         return await Get.dialog(const SensorConnectionDialog());
       }
     }

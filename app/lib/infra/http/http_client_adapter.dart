@@ -44,7 +44,7 @@ class HttpClientAdapter implements HttpClient {
     } on Exception catch (error) {
       debugPrint('$error');
 
-      throw const InternalServerException('Conexão com o servidor perdida');
+      throw const InternalServerException('Falha na conexão com o servidor. Tente novamente.');
     }
 
     return _checkResponseAndReturn(response);
@@ -62,7 +62,7 @@ class HttpClientAdapter implements HttpClient {
     } on Exception catch (error) {
       debugPrint('$error');
 
-      throw const InternalServerException('Conexão com o servidor perdida');
+      throw const InternalServerException('Falha na conexão com o servidor. Tente novamente.');
     }
 
     return _checkResponseAndReturnAll(response);

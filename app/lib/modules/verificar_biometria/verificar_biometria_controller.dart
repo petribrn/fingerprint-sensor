@@ -37,19 +37,24 @@ class GetxVerificarBiometriaController extends GetxController implements Verific
     }
 
     // 2: Check sensor connection state
-    // final resultSensor = await notificationRepository.fetchSensorState();
+    Result resultSensor = Result();
+    try {
+      resultSensor = await notificationRepository.fetchSensorState();
+    } on Result catch (error) {
+      return showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
+    }
 
-    // if (resultSensor.hasError) {
-    //   return showSnackbar(text: 'Falha na conexão com o servidor. Tente novamente.');
-    // }
+    if (resultSensor.hasError) {
+      return showSnackbar(text: 'Falha na conexão com o servidor. Tente novamente.');
+    }
 
-    // if (resultSensor.hasData) {
-    //   final dataTyped = resultSensor.data as Map<String, dynamic>;
+    if (resultSensor.hasData) {
+      final dataTyped = resultSensor.data as Map<String, dynamic>;
 
-    //   if (dataTyped['data'] != true) {
-    //     return await Get.dialog(const SensorConnectionDialog());
-    //   }
-    // }
+      if (dataTyped['isUp'] != true) {
+        return await Get.dialog(const SensorConnectionDialog());
+      }
+    }
 
     _willStartVerification.value = true;
     _isVerifyButtonDisabled.value = true;

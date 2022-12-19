@@ -1,5 +1,4 @@
 
-// Import required libraries
 #include "ESP8266WiFi.h"
 #include "ESPAsyncWebServer.h"
 #include <AsyncJson.h>
@@ -13,9 +12,9 @@
 SoftwareSerial mySerial(D7, D8);
 Adafruit_Fingerprint fingerprintSensor = Adafruit_Fingerprint(&mySerial);
 
-// Replace with your network credentials
-const char* ssid = "vptr_2.4";
-const char* password = "35220911";
+// Network credentials
+const char* ssid = "SSID";
+const char* password = "PASSWORD";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -45,20 +44,6 @@ void setup(){
   Serial.println(WiFi.localIP());
 
   fingerprintSensor.begin(57600);
-
-
-  // server.onRequestBody([](AsyncWebServerRequest * request, uint8_t *data, size_t len, size_t index, size_t total) {
-  //   if (request->url() == "/post") {
-  //     DynamicJsonBuffer jsonBuffer;
-  //     JsonObject& root = jsonBuffer.parseObject((const char*)data);
-  //     if (root.success()) {
-  //       if (root.containsKey("id")) {
-  //         Serial.println(root["id"].asString()); // Hello
-  //       }
-  //     }
-  //     request->send(200, "text/plain", "end");
-  //   }
-  // });
 
   // Route for root / web page
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -283,10 +268,6 @@ void setup(){
     root.printTo(*response);
     request->send(response);
   });
-
-  // server.on("/hello", HTTP_GET, [](AsyncWebServerRequest *request){
-  //   request->send(200, "text/plain", "Hello World");
-  // });
 
   // Start server
   server.begin();

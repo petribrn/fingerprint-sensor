@@ -16,7 +16,6 @@ This a Flutter mobile app with a NodeJS backend using relational DB (MariaDB) th
 
 ## :sparkles: Features ##
 
-:heavy_check_mark: Cloud Based (GCP);\
 :heavy_check_mark: Mobile app;\
 :heavy_check_mark: Fingerprint recognition with arduino;
 
@@ -32,8 +31,7 @@ The following tools were used in this project:
 
 ## :white_check_mark: Requirements ##
 
-Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Node](https://nodejs.org/en/) installed. It's recommended to have any relational DB workbench, such as [MySQL Workbench](https://www.mysql.com/products/workbench/). This is a cloud based project, but it can easily be converted to a local environment.
-
+Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Node](https://nodejs.org/en/) installed. It's recommended to have any relational DB workbench, such as [MySQL Workbench](https://www.mysql.com/products/workbench/).
 &#xa0;
 
 <a href="#top">Back to top</a>

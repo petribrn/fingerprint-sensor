@@ -28,16 +28,22 @@ class ArduinoController {
 
   async initSignUpMode(req, res) {
     try {
-      if (!req.params.id) return false;
+      if (!req.params.id) return res.json(null);
+
+      const user = await User.findOne({ where: { fingerprint_id: req.params.id } });
+
+      if (user) return res.json(null);
 
       const arduinoResponse = await arduinoAxios.post('/newfingerprint', { id: req.params.id });
 
-      if (!arduinoResponse.data) return false;
+      if (!arduinoResponse.data) return res.json(null);
+
+      if (!arduinoResponse.data.initSignUp) return res.json(null);
 
       return res.json({
         data: {
           id: req.params.id,
-          signUpMode: true,
+          signUpMode: arduinoResponse.data.initSignUp,
           message: 'Posicione o dedo no sensor',
         },
       });
@@ -50,7 +56,9 @@ class ArduinoController {
     try {
       const arduinoResponse = await arduinoAxios.get('/first-read');
 
-      if (!arduinoResponse) return res.json({ data: { error: 'Did not get any response from arduino' } });
+      if (!arduinoResponse) return res.json(null);
+
+      if (arduinoResponse.data.error) return res.json({ error: arduinoResponse.data.error });
 
       const { removeFinger } = arduinoResponse.data;
 
@@ -61,7 +69,7 @@ class ArduinoController {
         },
       });
     } catch (error) {
-      return res.status(400).json(error.toJSON());
+      return res.status(400).json(error);
     }
   }
 
@@ -69,19 +77,21 @@ class ArduinoController {
     try {
       const arduinoResponse = await arduinoAxios.get('/second-read');
 
-      if (!arduinoResponse) return res.json({ data: { error: 'Did not get any response from arduino' } });
+      if (!arduinoResponse) return res.json(null);
 
-      const { fingerprintId, message } = arduinoResponse.data;
+      if (arduinoResponse.data.error) return res.json({ error: arduinoResponse.data.error });
+
+      const { fingerprintId, doneSecondRead } = arduinoResponse.data;
 
       return res.json({
         data: {
-          doneSecondRead: true,
+          doneSecondRead,
           fingerprintId,
-          message,
+          message: 'Leitura concluída',
         },
       });
     } catch (error) {
-      return res.status(400).json(error.toJSON());
+      return res.status(400).json(error);
     }
   }
 
@@ -89,13 +99,15 @@ class ArduinoController {
     try {
       const arduinoResponse = await arduinoAxios.get('/check-fingerprint');
 
-      if (!arduinoResponse) return res.json({ data: { error: 'Fingerprint not found' } });
+      if (!arduinoResponse) return res.json(null);
+
+      if (arduinoResponse.data.error) return res.json({ error: arduinoResponse.data.error });
 
       const { foundId, confidence } = arduinoResponse.data;
 
       const user = await User.findOne({ where: { fingerprint_id: foundId } });
 
-      if (!user) return res.json({ data: { error: 'User not found in cloud db.' } });
+      if (!user) return res.json(null);
 
       const { name, fingerprint_id } = user;
 
@@ -109,7 +121,7 @@ class ArduinoController {
         read_at: currentDatetime,
       });
 
-      if (!access) return res.status(400).json({ data: { error: 'Fail to register access.' } });
+      if (!access) return res.json(null);
 
       return res.json({
         data: {
@@ -127,7 +139,7 @@ class ArduinoController {
     try {
       const arduinoResponse = await arduinoAxios.get('/get-fingerprint-count');
 
-      if (!arduinoResponse) return res.json({ data: { error: 'Did not get any response from arduino' } });
+      if (!arduinoResponse) return res.json(null);
 
       const { fingerprintCount } = arduinoResponse.data;
 
@@ -145,7 +157,7 @@ class ArduinoController {
     try {
       const arduinoResponse = await arduinoAxios.get('/empty-database');
 
-      if (!arduinoResponse) return res.json({ data: { error: 'Did not get any response from arduino' } });
+      if (!arduinoResponse) return res.json(null);
 
       return res.json({
         data: {

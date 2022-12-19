@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../contracts/contracts.dart';
@@ -79,7 +78,7 @@ class GetxVisualizarHistoricoController extends GetxController implements Visual
       await Future.delayed(const Duration(milliseconds: 800));
       _isLoading.value = false;
     } on Result catch (error) {
-      showSnackbar(text: error.error ?? 'Falha na conexão com o servidor. Tente novamente.');
+      showSnackbar(text: error.error ?? 'Erro na conexão com o servidor. Tente novamente.');
     }
   }
 

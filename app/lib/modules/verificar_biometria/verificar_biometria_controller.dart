@@ -27,7 +27,10 @@ class GetxVerificarBiometriaController extends GetxController implements Verific
   @override
   Future<void> onVerifyButtonPressed() async {
     if (_isVerifyButtonDisabled.value) {
-      return showSnackbar(text: 'Aguarde a verificação ser finalizada.');
+      return showSnackbar(
+        text: 'Aguarde a verificação ser finalizada',
+        duration: const Duration(seconds: 2),
+      );
     }
 
     // 1: Check device connectivity state
@@ -37,19 +40,24 @@ class GetxVerificarBiometriaController extends GetxController implements Verific
     }
 
     // 2: Check sensor connection state
-    // final resultSensor = await notificationRepository.fetchSensorState();
+    Result resultSensor = Result();
+    try {
+      resultSensor = await notificationRepository.fetchSensorState();
 
-    // if (resultSensor.hasError) {
-    //   return showSnackbar(text: 'Falha na conexão com o servidor. Tente novamente.');
-    // }
+      if (resultSensor.hasError || resultSensor.isEmpty) {
+        throw Result.empty();
+      }
 
-    // if (resultSensor.hasData) {
-    //   final dataTyped = resultSensor.data as Map<String, dynamic>;
+      if (resultSensor.hasData) {
+        final dataTyped = resultSensor.data as Map<String, dynamic>;
 
-    //   if (dataTyped['data'] != true) {
-    //     return await Get.dialog(const SensorConnectionDialog());
-    //   }
-    // }
+        if (dataTyped['data']['isUp'] != true) {
+          return await Get.dialog(const SensorConnectionDialog());
+        }
+      }
+    } on Result catch (result) {
+      return showSnackbar(text: result.error ?? 'Erro na conexão com o servidor. Tente novamente');
+    }
 
     _willStartVerification.value = true;
     _isVerifyButtonDisabled.value = true;
@@ -62,52 +70,45 @@ class GetxVerificarBiometriaController extends GetxController implements Verific
 
     try {
       // 3: Verify user fingerprint in sensor
-      await fingerprintRepository.verifyFingerprint();
+      final resultVerify = await fingerprintRepository.verifyFingerprint();
 
-      await Future.delayed(const Duration(seconds: 2));
-      yield Result.data('Digital encontrada');
+      if (resultVerify.hasError || resultVerify.isEmpty) {
+        throw Result.empty();
+      } else if (resultVerify.hasData) {
+        final dataTyped = resultVerify.data as Map<String, dynamic>;
 
-      return;
+        if (dataTyped['data']['error'] != null) {
+          final error = dataTyped['error'];
 
-      // if (resultVerify.hasError || resultVerify.isEmpty) {
-      //   throw Result.error('Erro na verificação da digital');
-      // } else if (resultVerify.hasData) {
-      //   final dataTyped = resultVerify.data as Map<String, dynamic>;
+          if (error == 'Fingerprint not found') {
+            throw Result.error('Digital não foi encontrada no sensor');
+          }
 
-      //   if (dataTyped['data']['error'] != null) {
-      //     final error = dataTyped['data']['error'];
+          if (error == 'Erro image2Tz') {
+            throw Result.error('Erro ao ler imagem da digital no sensor. Tente novamente');
+          }
 
-      //     if (error == 'Connection lost' || error == 'Did not get any response from arduino') {
-      //       showSnackbar(
-      //         text: 'Falha na conexão com o servidor. Tente novamente.',
-      //       );
-      //     } else if (error == 'Fingerprint not found') {
-      //       showSnackbar(
-      //         text: 'Digital não foi encontrada no sensor',
-      //       );
-      //     } else if (error == 'User not found in cloud db.') {
-      //       showSnackbar(
-      //         text: 'Digital não foi encontrada no servidor',
-      //       );
-      //     }
-      //   } else {
-      //     await Future.delayed(const Duration(seconds: 2));
-      //     yield Result.data('Digital encontrada');
+          throw Result.empty();
+        } else {
+          await Future.delayed(const Duration(seconds: 2));
+          yield Result.data('Digital encontrada com sucesso');
 
-      //     Get.dialog(
-      //       FinishReadDialog(
-      //         dialogContent: FinishDialogContent(
-      //           id: dataTyped['data']['foundId'],
-      //           name: dataTyped['data']['name'],
-      //           date: DateTime.now(),
-      //           confidence: dataTyped['data']['confidence'],
-      //         ),
-      //       ),
-      //     );
-      //   }
-      // }
-    } on Result catch (error) {
-      yield error;
+          Get.dialog(
+            FinishReadDialog(
+              dialogContent: FinishDialogContent(
+                id: dataTyped['data']['foundId'],
+                name: dataTyped['data']['name'],
+                date: DateTime.now(),
+                confidence: dataTyped['data']['confidence'],
+              ),
+            ),
+          );
+        }
+      }
+    } on Result catch (result) {
+      showSnackbar(text: result.error ?? 'Erro na conexão com o servidor. Tente novamente');
+
+      yield Result.error('Erro na verificação da digital');
     }
   }
 

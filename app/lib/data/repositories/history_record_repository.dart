@@ -11,13 +11,13 @@ class HttpHistoryRecordRepository implements HistoryRecordRepository {
 
   @override
   Future<List<HistoryRecord>?> fetchAllHistoryRecords() async {
-    final url = makeApiUrl(path: 'users/access-history');
+    final url = makeApiUrl(path: 'arduino/access-history');
     List? historyRecordsResponse;
 
     try {
       historyRecordsResponse = await httpClientAdapter.requestAll(url: url);
-    } on Exception catch (error) {
-      throw Result.error('$error');
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
 
     if (historyRecordsResponse == null) return null;

@@ -10,8 +10,8 @@ class HttpFingerprintRepository implements FingerprintRepository {
   });
 
   @override
-  Future<Result> sendFingerprintId(int fingerprintId) async {
-    final url = makeApiUrl(path: 'users/init-sign-up/$fingerprintId');
+  Future<Result> initSignUp(int fingerprintId) async {
+    final url = makeApiUrl(path: 'arduino/init-sign-up/$fingerprintId');
 
     try {
       final fingerprintResponse = await httpClientAdapter.request(
@@ -31,7 +31,7 @@ class HttpFingerprintRepository implements FingerprintRepository {
 
   @override
   Future<Result> executeFirstRead() async {
-    final url = makeApiUrl(path: 'users/first-read');
+    final url = makeApiUrl(path: 'arduino/first-read');
 
     try {
       final fingerprintResponse = await httpClientAdapter.request(
@@ -40,18 +40,14 @@ class HttpFingerprintRepository implements FingerprintRepository {
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (error) {
-      if (error is AppException) {
-        throw Result.error(error.message);
-      }
-
-      throw Result.error('$error');
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
   }
 
   @override
   Future<Result> executeSecondRead() async {
-    final url = makeApiUrl(path: 'users/second-read');
+    final url = makeApiUrl(path: 'arduino/second-read');
 
     try {
       final fingerprintResponse = await httpClientAdapter.request(
@@ -60,18 +56,14 @@ class HttpFingerprintRepository implements FingerprintRepository {
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (error) {
-      if (error is AppException) {
-        throw Result.error(error.message);
-      }
-
-      throw Result.error('$error');
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
   }
 
   @override
   Future<Result> verifyFingerprint() async {
-    final url = makeApiUrl(path: 'users/check-fingerprint');
+    final url = makeApiUrl(path: 'arduino/check-fingerprint');
 
     try {
       final fingerprintResponse = await httpClientAdapter.request(
@@ -80,12 +72,58 @@ class HttpFingerprintRepository implements FingerprintRepository {
       );
 
       return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (error) {
-      if (error is AppException) {
-        throw Result.error(error.message);
-      }
+    } on AppException catch (error) {
+      throw Result.error(error.message);
+    }
+  }
 
-      throw Result.error('$error');
+  @override
+  Future<Result> sendFingerprint(Fingerprint fingerprint) async {
+    final url = makeApiUrl(path: 'users');
+
+    try {
+      final fingerprintResponse = await httpClientAdapter.request(
+        url: url,
+        method: 'post',
+        body: fingerprint.toMap(),
+      );
+
+      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
+    } on AppException catch (error) {
+      throw Result.error(error.message);
+    }
+  }
+
+  @override
+  Future<Result> updateFingerprint(Fingerprint fingerprint) async {
+    final url = makeApiUrl(path: 'users/${fingerprint.fingerprintId}');
+
+    try {
+      final fingerprintResponse = await httpClientAdapter.request(
+        url: url,
+        method: 'put',
+        body: fingerprint.toMap(),
+      );
+
+      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
+    } on AppException catch (error) {
+      throw Result.error(error.message);
+    }
+  }
+
+  @override
+  Future<Result> deleteFingerprint(int fingerprintId) async {
+    final url = makeApiUrl(path: 'users/$fingerprintId');
+
+    try {
+      final fingerprintResponse = await httpClientAdapter.request(
+        url: url,
+        method: 'delete',
+      );
+
+      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
   }
 
@@ -96,8 +134,8 @@ class HttpFingerprintRepository implements FingerprintRepository {
 
     try {
       fingerprintsResponse = await httpClientAdapter.requestAll(url: url);
-    } on Exception catch (error) {
-      throw Result.error('$error');
+    } on AppException catch (error) {
+      throw Result.error(error.message);
     }
 
     if (fingerprintsResponse == null) return null;
@@ -113,46 +151,5 @@ class HttpFingerprintRepository implements FingerprintRepository {
     final fingerprints = fingerprintsRaw.where((fingerprint) => fingerprint.fingerprintId != -1).toList();
 
     return fingerprints;
-  }
-
-  @override
-  Future<Result> updateFingerprint(Fingerprint fingerprint) async {
-    final url = makeApiUrl(path: 'users/${fingerprint.fingerprintId}');
-
-    try {
-      final fingerprintResponse = await httpClientAdapter.request(
-        url: url,
-        method: 'put',
-        body: fingerprint.toMap(),
-      );
-
-      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (error) {
-      if (error is AppException) {
-        throw Result.error(error.message);
-      }
-
-      throw Result.error('$error');
-    }
-  }
-
-  @override
-  Future<Result> deleteFingerprint(int fingerprintId) async {
-    final url = makeApiUrl(path: 'users/$fingerprintId');
-
-    try {
-      final fingerprintResponse = await httpClientAdapter.request(
-        url: url,
-        method: 'delete',
-      );
-
-      return fingerprintResponse == null ? Result.empty() : Result.data(fingerprintResponse);
-    } on Exception catch (error) {
-      if (error is AppException) {
-        throw Result.error(error.message);
-      }
-
-      throw Result.error('$error');
-    }
   }
 }

@@ -32,9 +32,9 @@ extension StringExtension on String {
     final month = int.parse('${this[5]}${this[6]}');
     final day = int.parse('${this[8]}${this[9]}');
 
-    final second = int.parse('${this[11]}${this[12]}');
+    final hour = int.parse('${this[11]}${this[12]}');
     final minute = int.parse('${this[14]}${this[15]}');
-    final hour = int.parse('${this[17]}${this[18]}');
+    final second = int.parse('${this[17]}${this[18]}');
 
     return DateTime(year, month, day, hour, minute, second);
   }

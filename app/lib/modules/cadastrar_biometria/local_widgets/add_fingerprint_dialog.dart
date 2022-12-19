@@ -74,7 +74,10 @@ class AddFingerprintDialog extends StatelessWidget {
     final fieldCurrentState = fieldKey.currentState;
 
     if (fieldCurrentState == null) {
-      showSnackbar(text: 'Não foi possível enviar o código. Tente novamente.');
+      showSnackbar(
+        text: 'Não foi possível enviar o código. Tente novamente.',
+        duration: const Duration(seconds: 2),
+      );
       return null;
     }
 

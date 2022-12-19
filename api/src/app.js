@@ -4,6 +4,7 @@ import cors from 'cors';
 import corsOptionsDelegate from './config/corsConfig';
 import homeRoutes from './routes/homeRoutes';
 import userRoutes from './routes/userRoutes';
+import arduinoRoutes from './routes/arduinoRoutes';
 import './database';
 
 class App {
@@ -23,6 +24,7 @@ class App {
   routes() {
     this.app.use('/', homeRoutes);
     this.app.use('/users/', userRoutes);
+    this.app.use('/arduino/', arduinoRoutes);
   }
 }
 

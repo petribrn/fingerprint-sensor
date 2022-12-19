@@ -12,7 +12,7 @@ class HttpNotificationRepository implements NotificationRepository {
 
   @override
   Future<Result> fetchSensorState() async {
-    final url = makeApiUrl(path: 'users/status');
+    final url = makeApiUrl(path: 'arduino/check-sensor-status');
 
     try {
       final resultNotification = await httpClientAdapter.request(

@@ -62,50 +62,56 @@ class GetxVerificarBiometriaController extends GetxController implements Verific
 
     try {
       // 3: Verify user fingerprint in sensor
-      await fingerprintRepository.verifyFingerprint();
+      final resultVerify = await fingerprintRepository.verifyFingerprint();
 
-      await Future.delayed(const Duration(seconds: 2));
-      yield Result.data('Digital encontrada');
+      if (resultVerify.hasError || resultVerify.isEmpty) {
+        showSnackbar(
+          text: 'Falha na conexão com o servidor. Tente novamente.',
+        );
 
-      return;
+        throw Result.error('Erro na verificação da digital');
+      } else if (resultVerify.hasData) {
+        final dataTyped = resultVerify.data as Map<String, dynamic>;
 
-      // if (resultVerify.hasError || resultVerify.isEmpty) {
-      //   throw Result.error('Erro na verificação da digital');
-      // } else if (resultVerify.hasData) {
-      //   final dataTyped = resultVerify.data as Map<String, dynamic>;
+        if (dataTyped['error'] != null) {
+          final error = dataTyped['error'];
 
-      //   if (dataTyped['data']['error'] != null) {
-      //     final error = dataTyped['data']['error'];
+          if (error == 'Fingerprint not found') {
+            showSnackbar(
+              text: 'Digital não foi encontrada no sensor',
+            );
+          } else if (error == 'User not found in cloud db.') {
+            showSnackbar(
+              text: 'Digital não foi encontrada no servidor',
+            );
+          } else if (error == 'Fail to register access.') {
+            showSnackbar(
+              text: 'Falha ao registrar histórico de verificação. Tente novamente.',
+              duration: const Duration(seconds: 3),
+            );
+          } else {
+            showSnackbar(
+              text: 'Falha na conexão com o servidor. Tente novamente.',
+            );
+          }
 
-      //     if (error == 'Connection lost' || error == 'Did not get any response from arduino') {
-      //       showSnackbar(
-      //         text: 'Falha na conexão com o servidor. Tente novamente.',
-      //       );
-      //     } else if (error == 'Fingerprint not found') {
-      //       showSnackbar(
-      //         text: 'Digital não foi encontrada no sensor',
-      //       );
-      //     } else if (error == 'User not found in cloud db.') {
-      //       showSnackbar(
-      //         text: 'Digital não foi encontrada no servidor',
-      //       );
-      //     }
-      //   } else {
-      //     await Future.delayed(const Duration(seconds: 2));
-      //     yield Result.data('Digital encontrada');
+          throw Result.error('Erro na verificação da digital');
+        } else {
+          await Future.delayed(const Duration(seconds: 2));
+          yield Result.data('Digital encontrada');
 
-      //     Get.dialog(
-      //       FinishReadDialog(
-      //         dialogContent: FinishDialogContent(
-      //           id: dataTyped['data']['foundId'],
-      //           name: dataTyped['data']['name'],
-      //           date: DateTime.now(),
-      //           confidence: dataTyped['data']['confidence'],
-      //         ),
-      //       ),
-      //     );
-      //   }
-      // }
+          Get.dialog(
+            FinishReadDialog(
+              dialogContent: FinishDialogContent(
+                id: dataTyped['foundId'],
+                name: dataTyped['name'],
+                date: DateTime.now(),
+                confidence: dataTyped['confidence'],
+              ),
+            ),
+          );
+        }
+      }
     } on Result catch (error) {
       yield error;
     }

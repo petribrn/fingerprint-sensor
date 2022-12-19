@@ -79,36 +79,44 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
       if (_currentId == null) throw Result.error('Id da digital nulo');
 
       // 3: Send id, check it and start sign up
-      final resultId = await fingerprintRepository.sendFingerprintId(_currentId!);
+      final resultId = await fingerprintRepository.initSignUp(_currentId!);
 
       if (resultId.hasError || resultId.isEmpty) {
-        _handleSignUpResponseError(result: resultId, errorMessage: 'Erro no envio da digital');
+        showSnackbar(
+          text: 'Falha na conexão com o servidor. Tente novamente.',
+        );
 
-        if (resultId.error == 'Fingerprint id already registered') {
+        throw Result.error('Erro durante o cadastro da digital');
+      } else if (resultId.hasData) {
+        final dataTyped = resultId.data as Map<String, dynamic>;
+
+        if (resultId.error == 'Id da digital já cadastrado') {
           showSnackbar(
             text: 'O código informado já pertence a uma digital cadastrada. ${resultId.error}',
             duration: const Duration(seconds: 3),
           );
         }
-      } else if (resultId.hasData) {
-        final dataTyped = resultId.data as Map<String, dynamic>;
 
-        if (dataTyped['message'] == 'Success') {
+        if (dataTyped['message'] == 'Posicione o dedo no sensor') {
           await Future.delayed(const Duration(seconds: 2));
-          yield Result.data('Posicione o dedo no sensor');
+          yield Result.data(dataTyped['message']);
         }
       }
 
       // 4: Start of first read
       final resultFirstRead = await fingerprintRepository.executeFirstRead();
       if (resultFirstRead.hasError || resultFirstRead.isEmpty) {
-        _handleSignUpResponseError(result: resultFirstRead, errorMessage: 'Erro na leitura da digital');
-      } else if (resultFirstRead.hasData) {
-        final dataTyped = resultId.data as Map<String, dynamic>;
+        showSnackbar(
+          text: 'Falha na conexão com o servidor. Tente novamente.',
+        );
 
-        if (dataTyped['message'] == 'Success') {
+        throw Result.error('Erro durante o cadastro da digital');
+      } else if (resultFirstRead.hasData) {
+        final dataTyped = resultFirstRead.data as Map<String, dynamic>;
+
+        if (dataTyped['message'] == 'Retire o dedo do sensor') {
           await Future.delayed(const Duration(seconds: 2));
-          yield Result.data('Retire o dedo do sensor');
+          yield Result.data(dataTyped['message']);
         }
       }
 
@@ -121,37 +129,47 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
       final resultSecondRead = await fingerprintRepository.executeSecondRead();
 
       if (resultSecondRead.hasError || resultSecondRead.isEmpty) {
-        _handleSignUpResponseError(result: resultSecondRead, errorMessage: 'Erro na leitura da digital');
+        showSnackbar(
+          text: 'Falha na conexão com o servidor. Tente novamente.',
+        );
 
-        if (resultSecondRead.error == 'Could not create fingerprint') {
-          showSnackbar(
-            text: 'Erro ao criar digital no banco do sensor. ${resultSecondRead.error}',
-            duration: const Duration(seconds: 3),
-          );
-        }
-
-        if (resultSecondRead.error == 'Could not store fingerprint') {
-          showSnackbar(
-            text: 'Erro ao salvar digital no banco do sensor. ${resultSecondRead.error}',
-            duration: const Duration(seconds: 3),
-          );
-        }
+        throw Result.error('Erro durante o cadastro da digital');
       } else if (resultSecondRead.hasData) {
-        final dataTyped = resultId.data as Map<String, dynamic>;
+        final dataTyped = resultSecondRead.data as Map<String, dynamic>;
 
-        if (dataTyped['message'] == 'Success') {
-          await Future.delayed(const Duration(seconds: 2));
-          yield Result.data('Digital cadastrada com sucesso');
-
-          Get.dialog(
-            FinishReadDialog(
-              isCadastro: true,
-              dialogContent: FinishDialogContent(
-                id: _currentId!,
-                date: DateTime.now(),
-              ),
-            ),
+        if (dataTyped['message'] == 'Digital cadastrada com sucesso') {
+          // 6: Store new fingeprint id in database
+          final resultStore = await fingerprintRepository.sendFingerprint(
+            Fingerprint(fingerprintId: _currentId!),
           );
+
+          if (resultStore.hasError || resultStore.isEmpty) {
+            if (resultStore.isEmpty) {
+              showSnackbar(
+                text: 'Falha na conexão com o servidor. Tente novamente.',
+              );
+            } else if (resultStore.hasError) {
+              showSnackbar(
+                text: 'Erro ao salvar digital no banco de dados. Tente novamente.',
+                duration: const Duration(seconds: 3),
+              );
+            }
+
+            throw Result.error('Erro durante o cadastro da digital');
+          } else {
+            await Future.delayed(const Duration(seconds: 2));
+            yield Result.data(dataTyped['message']);
+
+            Get.dialog(
+              FinishReadDialog(
+                isCadastro: true,
+                dialogContent: FinishDialogContent(
+                  id: _currentId!,
+                  date: DateTime.now(),
+                ),
+              ),
+            );
+          }
         }
       }
     } on Result catch (error) {
@@ -163,16 +181,5 @@ class GetxCadastrarBiometriaController extends GetxController implements Cadastr
   void onFinishRegister() {
     _willStartRegister.value = false;
     _isFabDisabled.value = false;
-  }
-
-  void _handleSignUpResponseError({required Result result, required String errorMessage}) {
-    if (result.error == 'Connection lost' || result.error == 'Did not get any response from arduino') {
-      showSnackbar(
-        text: 'Falha na conexão com o servidor. Tente novamente.',
-        duration: const Duration(seconds: 2),
-      );
-    }
-
-    throw Result.error(errorMessage);
   }
 }

@@ -27,7 +27,7 @@ class Fingerprint extends Equatable {
   Map<String, dynamic> toMap() {
     return {
       'id': fingerprintId,
-      'name': name,
+      'name': name ?? '',
     };
   }
 

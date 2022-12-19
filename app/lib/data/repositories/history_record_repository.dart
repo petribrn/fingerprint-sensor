@@ -11,7 +11,7 @@ class HttpHistoryRecordRepository implements HistoryRecordRepository {
 
   @override
   Future<List<HistoryRecord>?> fetchAllHistoryRecords() async {
-    final url = makeApiUrl(path: 'users/access-history');
+    final url = makeApiUrl(path: 'arduino/access-history');
     List? historyRecordsResponse;
 
     try {
